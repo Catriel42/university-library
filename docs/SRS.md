@@ -2,7 +2,7 @@
 
 ## University Library SPA: Catalog Browsing and Loan Management
 
-**Document Version:** 1.1
+**Document Version:** 1.2
 **Status:** Draft, first delivery
 **Standard Reference:** Structured per IEEE 29148 conventions, adapted for project scale.
 
@@ -14,6 +14,7 @@
 | --- | --- | --- |
 | 1.0 | 2026-09-27 | Initial version, aligned with the capstone definition and the Open Library API spike (SPIKE-01). |
 | 1.1 | 2026-09-30 | Live verification of Open Library API completed (SPIKE-01); ASM-02 and ASM-05 validated, OPEN-01 closed. |
+| 1.2 | 2026-09-30 | OPEN-02 resolved via ADR-0001: adopted HttpOnly, Secure, SameSite cookies for JWT storage. |
 
 ---
 
@@ -366,7 +367,6 @@ All traffic over HTTPS, JSON payloads. Errors follow one shape: `{ "error": { "c
 
 ## 9. Assumptions and Open Issues
 
-- `OPEN-02`: Token storage on the client: `localStorage` (simple, exposed to XSS) versus an httpOnly cookie (safer, more complex across separate frontend/backend domains). Record as an ADR.
 - `OPEN-03`: Availability computed on read from loans and holds (recommended: fewer inconsistencies) versus maintained counters (faster). Record as an ADR.
 - `OPEN-04`: Confirm Open Library's usage policy for automated/proxied traffic, including any identification headers it expects, and set cache TTLs accordingly.
 - `OPEN-05`: JWT lifetime and whether to add refresh tokens.
