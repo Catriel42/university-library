@@ -1,0 +1,14 @@
+{
+  "name": "university-library-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev:frontend": "pnpm --filter @university-library/frontend dev",
+    "dev:backend": "pnpm --filter @university-library/backend dev",
+    "build:frontend": "pnpm --filter @university-library/frontend build",
+    "build:backend": "pnpm --filter @university-library/backend build",
+    "build": "pnpm -r run build",
+    "lint": "pnpm -r lint"
+  }
+}
