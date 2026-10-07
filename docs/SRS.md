@@ -15,6 +15,7 @@
 | 1.0 | 2026-09-27 | Initial version, aligned with the capstone definition and the Open Library API spike (SPIKE-01). |
 | 1.1 | 2026-09-30 | Live verification of Open Library API completed (SPIKE-01); ASM-02 and ASM-05 validated, OPEN-01 closed. |
 | 1.2 | 2026-09-30 | OPEN-02 resolved via ADR-0001: adopted HttpOnly, Secure, SameSite cookies for JWT storage. |
+| 1.3 | 2026-10-07 | OPEN-03, OPEN-04, and OPEN-05 resolved via ADR-0002, ADR-0003, and ADR-0004 respectively. |
 
 ---
 
@@ -362,15 +363,6 @@ All traffic over HTTPS, JSON payloads. Errors follow one shape: `{ "error": { "c
 | 9. Security | FR-02, FR-06, FR-07, FR-22, NFR-10 to NFR-13 |
 | 10. Build and deployment | NFR-18, NFR-19 |
 | Tech stack | CON-02, CON-03 |
-
----
-
-## 9. Assumptions and Open Issues
-
-- `OPEN-03`: Availability computed on read from loans and holds (recommended: fewer inconsistencies) versus maintained counters (faster). Record as an ADR.
-- `OPEN-04`: Confirm Open Library's usage policy for automated/proxied traffic, including any identification headers it expects, and set cache TTLs accordingly.
-- `OPEN-05`: JWT lifetime and whether to add refresh tokens.
-- **Future work (capstone's optional advanced feature and beyond):** wishlist with availability notifications, due-date and overdue notifications, email notifications, late fines, librarian/admin role, editions-level (ISBN) loans.
 
 ---
 

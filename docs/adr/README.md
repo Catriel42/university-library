@@ -36,6 +36,6 @@ Write an ADR whenever a technical decision:
 | ID | Date | Title | Status | Related SRS Item |
 | --- | --- | --- | --- | --- |
 | [ADR-0001](./0001-client-token-storage.md) | 2026-09-30 | Client Token Storage Strategy (LocalStorage vs HttpOnly Cookie) | Accepted | OPEN-02, NFR-10, NFR-11 |
-| [ADR-0002](./0002-book-availability-strategy.md) | Pending | Book Availability Strategy (On-Read vs Maintained Counters) | Proposed | OPEN-03, BR-03, NFR-05 |
-| [ADR-0003](./0003-open-library-proxy-and-caching.md) | Pending | Open Library Proxying, Identification, and Caching Policies | Proposed | OPEN-04, NFR-04, ASM-01 |
-| [ADR-0004](./0004-jwt-lifecycle-and-sessions.md) | Pending | JWT Expiration and Refresh Token Strategy | Proposed | OPEN-05, FR-03, NFR-10 |
+| [ADR-0002](./0002-book-availability-strategy.md) | 2026-10-07 | Book Availability Strategy (On-Read vs Maintained Counters) | Accepted | OPEN-03, BR-03, NFR-05 |
+| [ADR-0003](./0003-open-library-proxy-and-caching.md) | 2026-10-07 | Open Library Proxying, Identification, and Caching Policies | Accepted | OPEN-04, NFR-04, ASM-01 |
+| [ADR-0004](./0004-jwt-lifecycle-and-sessions.md) | 2026-10-07 | JWT Expiration and Refresh Token Strategy | Accepted | OPEN-05, FR-03, NFR-10 |
