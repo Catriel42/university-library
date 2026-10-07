@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String          @id @default(uuid())
+  name         String
+  email        String          @unique
+  passwordHash String
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  loans        Loan[]
+  reservations Reservation[]
+  readingLog   ReadingStatus[]
+}
+
+model Work {
+  id          String          @id // Open Library work key (e.g., "OL27448W")
+  title       String
+  firstAuthor String?
+  coverId     Int?
+  copies      Int             @default(3) // Matches BR-01 DEFAULT_COPIES
+  loans       Loan[]
+  reservations Reservation[]
+  readingLog  ReadingStatus[]
+}
+
+model Loan {
+  id         String    @id @default(uuid())
+  userId     String
+  workId     String
+  borrowedAt DateTime  @default(now())
+  dueDate    DateTime
+  returnedAt DateTime?
+  status     LoanStatus @default(ACTIVE)
+  renewals   Int       @default(0)
+  
+  user       User      @relation(fields: [userId], references: [id])
+  work       Work      @relation(fields: [workId], references: [id])
+
+  @@unique([userId, workId], map: "unique_active_loan", name: "unique_active_loan") // Partial index requires raw SQL for Prisma, we'll enforce in service or use @@unique temporarily (though a user shouldn't have two loans for the same work at all, active or not? BR-06: "A User may not have two active loans, or a loan and a reservation, for the same Work." For full history, they might borrow it again later, so uniqueness is on active only. We will remove the @@unique constraint here and enforce via service or raw SQL).
+}
+
+enum LoanStatus {
+  ACTIVE
+  RETURNED
+}
+
+model Reservation {
+  id            String            @id @default(uuid())
+  userId        String
+  workId        String
+  createdAt     DateTime          @default(now())
+  status        ReservationStatus @default(PENDING)
+  holdExpiresAt DateTime?
+
+  user          User              @relation(fields: [userId], references: [id])
+  work          Work              @relation(fields: [workId], references: [id])
+}
+
+enum ReservationStatus {
+  PENDING
+  HOLD
+  FULFILLED
+  CANCELLED
+}
+
+model ReadingStatus {
+  id        String       @id @default(uuid())
+  userId    String
+  workId    String
+  status    ReadingState
+  updatedAt DateTime     @updatedAt
+
+  user      User         @relation(fields: [userId], references: [id])
+  work      Work         @relation(fields: [workId], references: [id])
+
+  @@unique([userId, workId]) // NFR-15: one reading status per (user, work)
+}
+
+enum ReadingState {
+  READING
+  COMPLETED
+}

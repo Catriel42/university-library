@@ -10,5 +10,14 @@
     "build:backend": "pnpm --filter @university-library/backend build",
     "build": "pnpm -r run build",
     "lint": "pnpm -r lint"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "prisma",
+      "@prisma/engines",
+      "@prisma/client",
+      "workerd"
+    ]
   }
 }

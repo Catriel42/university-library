@@ -11,6 +11,8 @@ The system connects to the Open Library public catalog for bibliographic metadat
 Project requirements, architecture specifications, and delivery roadmaps are maintained under the `docs/` directory:
 
 - **Requirements Specification:** [docs/SRS.md](docs/SRS.md) - Complete functional (FR), non-functional (NFR), and lending business rules (BR) per IEEE 29148.
+- **Architecture Decisions (ADR):** [docs/adr/README.md](docs/adr/README.md) - Log of architectural choices and trade-offs.
+- **Database Design:** [docs/database-design.md](docs/database-design.md) - Entity-Relationship and Relational models for the PostgreSQL database.
 - **Sprint and Project Plan:** [docs/PLAN.md](docs/PLAN.md) - 7-week development schedule, sprint milestones, and deliverables.
 - **API Spike Report:** [docs/spikes/SPIKE-01-openlibrary.md](docs/spikes/SPIKE-01-openlibrary.md) - Technical analysis and live verification results for Open Library API integration.
 
