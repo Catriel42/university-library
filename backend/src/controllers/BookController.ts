@@ -40,7 +40,23 @@ async function search(req: Request, res: Response, next: NextFunction): Promise<
   }
 
   try {
-    res.json(await BookService.searchBooks(params));
+    const result = await BookService.searchBooks(params);
+    
+    // Map to the shared SearchResponseDTO contract
+    const response = {
+      numFound: result.numFound,
+      start: result.start,
+      docs: result.docs.map(doc => ({
+        id: doc.cleanKey,
+        title: doc.title,
+        firstAuthor: doc.author_name?.[0],
+        coverId: doc.cover_i,
+        totalCopies: doc.totalCopies,
+        availableCopies: doc.availableCopies
+      }))
+    };
+
+    res.json(response);
   } catch (error) {
     next(error);
   }

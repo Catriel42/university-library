@@ -41,3 +41,9 @@ export interface WorkDTO {
   totalCopies: number;
   availableCopies: number;
 }
+
+export interface SearchResponseDTO {
+  numFound: number;
+  start: number;
+  docs: WorkDTO[];
+}
