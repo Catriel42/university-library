@@ -1,6 +1,7 @@
 import express, { type Express, type Request, type Response, type NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import bookRoutes from './routes/bookRoutes.js';
 
 export function createApp(): Express {
   const app = express();
@@ -24,13 +25,19 @@ export function createApp(): Express {
     });
   });
 
+  app.use('/api/books', bookRoutes);
+
   // Central error handling middleware
-  app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     console.error('Unhandled error:', err);
-    res.status(500).json({
+    
+    const status = err.status || 500;
+    const code = err.name === 'OpenLibraryError' ? 'UPSTREAM_ERROR' : 'INTERNAL_SERVER_ERROR';
+    
+    res.status(status).json({
       error: {
-        code: 'INTERNAL_SERVER_ERROR',
-        message: 'An unexpected internal error occurred.',
+        code: status === 500 ? 'INTERNAL_SERVER_ERROR' : code,
+        message: err.message || 'An unexpected internal error occurred.',
       },
     });
   });
