@@ -1,8 +1,11 @@
 import { Outlet, Link } from 'react-router-dom';
-import { Library } from 'lucide-react';
+import { Library, User as UserIcon } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
+import { useAuth } from '@/context/AuthContext';
 
 export function AppLayout() {
+  const { user, logout } = useAuth();
+
   return (
     <div className="min-h-screen w-full flex flex-col items-center">
       <nav className="w-full max-w-[1200px] px-4 md:px-8 py-6 flex justify-between items-center bg-bg/90 backdrop-blur-md sticky top-0 z-50 border-b border-border">
@@ -10,13 +13,29 @@ export function AppLayout() {
           <Library className="text-accent" size={24} />
           <span className="font-serif text-xl tracking-wide font-medium">University Library</span>
         </Link>
-        <div className="flex gap-4">
-          <Link to="/loans" className={`text-muted hover:text-text font-sans hidden md:flex ${buttonVariants({ variant: 'ghost' })}`}>
-            My Loans
-          </Link>
-          <Link to="/login" className={`font-sans bg-surface-2 text-text border border-border hover:bg-border/50 ${buttonVariants()}`}>
-            Sign In
-          </Link>
+        <div className="flex items-center gap-3 md:gap-4">
+          {user ? (
+            <>
+              <Link to="/loans" className={`text-muted hover:text-text font-sans hidden md:flex ${buttonVariants({ variant: 'ghost' })}`}>
+                My Loans
+              </Link>
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border text-sm text-text">
+                <UserIcon size={14} className="text-accent" />
+                <span className="font-sans font-medium max-w-[120px] truncate">{user.name}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => logout()}
+                className={`text-muted hover:text-danger font-sans ${buttonVariants({ variant: 'ghost' })}`}
+              >
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <Link to="/login" className={`font-sans bg-surface-2 text-text border border-border hover:bg-border/50 ${buttonVariants()}`}>
+              Sign In
+            </Link>
+          )}
         </div>
       </nav>
 

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Search, BookX } from 'lucide-react';
-import axios from 'axios';
+import { apiClient } from '@/lib/api';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import type { WorkDTO, SearchResponseDTO } from '@university-library/shared';
 
@@ -28,7 +28,7 @@ export function CatalogPage() {
     if (queryParam) {
       const fetchData = async () => {
         try {
-          const response = await axios.get<SearchResponseDTO>('http://localhost:3001/api/books', {
+          const response = await apiClient.get<SearchResponseDTO>('/books', {
             params: { q: queryParam, limit: 12 }
           });
           if (!ignore) setResults(response.data.docs);
