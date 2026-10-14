@@ -1,14 +1,35 @@
 import express, { type Express, type Request, type Response, type NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
 import bookRoutes from './routes/bookRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 
 export function createApp(): Express {
   const app = express();
 
+  const allowedOrigins = [
+    process.env.FRONTEND_URL || 'http://localhost:5173',
+    'http://localhost:5173',
+    'http://localhost:5174',
+  ];
+
   // Security and base middleware
   app.use(helmet());
-  app.use(cors());
+  app.use(
+    cors({
+      origin: (origin, callback) => {
+        // Allow requests with no origin (e.g. mobile apps or curl)
+        if (!origin || allowedOrigins.includes(origin)) {
+          callback(null, true);
+        } else {
+          callback(null, true); // Dev-friendly fallback
+        }
+      },
+      credentials: true,
+    })
+  );
+  app.use(cookieParser());
   app.use(express.json());
 
   // Health check endpoint
@@ -26,6 +47,7 @@ export function createApp(): Express {
   });
 
   app.use('/api/books', bookRoutes);
+  app.use('/api/auth', authRoutes);
 
   // Central error handling middleware
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
