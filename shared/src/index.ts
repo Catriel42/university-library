@@ -16,6 +16,9 @@ export enum ErrorCode {
   RENEWAL_LIMIT = 'RENEWAL_LIMIT',
   RENEWAL_BLOCKED = 'RENEWAL_BLOCKED',
   UNAUTHORIZED = 'UNAUTHORIZED',
+  INVALID_CREDENTIALS = 'INVALID_CREDENTIALS',
+  EMAIL_IN_USE = 'EMAIL_IN_USE',
+  WEAK_PASSWORD = 'WEAK_PASSWORD',
   BAD_REQUEST = 'BAD_REQUEST',
   INTERNAL_ERROR = 'INTERNAL_ERROR'
 }
@@ -31,6 +34,21 @@ export interface UserDTO {
   id: string;
   name: string;
   email: string;
+}
+
+export interface RegisterRequestDTO {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface LoginRequestDTO {
+  email: string;
+  password: string;
+}
+
+export interface AuthResponseDTO {
+  user: UserDTO;
 }
 
 export interface WorkDTO {
