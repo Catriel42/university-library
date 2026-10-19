@@ -7,21 +7,31 @@ export function AppLayout() {
   const { user, logout } = useAuth();
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center">
-      <nav className="w-full max-w-[1200px] px-4 md:px-8 py-6 flex justify-between items-center bg-bg/90 backdrop-blur-md sticky top-0 z-50 border-b border-border">
-        <Link to="/" className="flex items-center gap-3 text-text hover:opacity-80 transition-opacity">
+    <div className="flex min-h-screen w-full flex-col items-center">
+      <nav className="bg-bg/90 border-border sticky top-0 z-50 flex w-full max-w-[1200px] items-center justify-between border-b px-4 py-6 backdrop-blur-md md:px-8">
+        <Link
+          to="/"
+          className="text-text flex items-center gap-3 transition-opacity hover:opacity-80"
+        >
           <Library className="text-accent" size={24} />
-          <span className="font-serif text-xl tracking-wide font-medium">University Library</span>
+          <span className="font-serif text-xl font-medium tracking-wide">
+            University Library
+          </span>
         </Link>
         <div className="flex items-center gap-3 md:gap-4">
           {user ? (
             <>
-              <Link to="/loans" className={`text-muted hover:text-text font-sans hidden md:flex ${buttonVariants({ variant: 'ghost' })}`}>
+              <Link
+                to="/loans"
+                className={`text-muted hover:text-text hidden font-sans md:flex ${buttonVariants({ variant: 'ghost' })}`}
+              >
                 My Loans
               </Link>
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border text-sm text-text">
+              <div className="bg-surface border-border text-text flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm">
                 <UserIcon size={14} className="text-accent" />
-                <span className="font-sans font-medium max-w-[120px] truncate">{user.name}</span>
+                <span className="max-w-[120px] truncate font-sans font-medium">
+                  {user.name}
+                </span>
               </div>
               <button
                 type="button"
@@ -32,19 +42,22 @@ export function AppLayout() {
               </button>
             </>
           ) : (
-            <Link to="/login" className={`font-sans bg-surface-2 text-text border border-border hover:bg-border/50 ${buttonVariants()}`}>
+            <Link
+              to="/login"
+              className={`bg-surface-2 text-text border-border hover:bg-border/50 border font-sans ${buttonVariants()}`}
+            >
               Sign In
             </Link>
           )}
         </div>
       </nav>
 
-      <main className="w-full max-w-[1200px] px-4 md:px-8 py-8 md:py-12 flex-1 flex flex-col">
+      <main className="flex w-full max-w-[1200px] flex-1 flex-col px-4 py-8 md:px-8 md:py-12">
         <Outlet />
       </main>
 
-      <footer className="w-full border-t border-border mt-auto py-8">
-        <div className="max-w-[1200px] mx-auto px-4 md:px-8 flex justify-between items-center text-sm text-muted">
+      <footer className="border-border mt-auto w-full border-t py-8">
+        <div className="text-muted mx-auto flex max-w-[1200px] items-center justify-between px-4 text-sm md:px-8">
           <span>&copy; {new Date().getFullYear()} University Library</span>
           <span className="font-mono text-xs">System Status: Online</span>
         </div>

@@ -1,0 +1,7 @@
+node_modules
+dist
+.system_generated
+*.puml
+*.png
+pnpm-lock.yaml
+.git

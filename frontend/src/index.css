@@ -1,36 +1,36 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
-  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Fraunces", ui-serif, Georgia, serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
-  
-  --color-bg: #0E1513;
-  --color-surface: #121C19;
-  --color-surface-2: #16221E;
-  --color-border: #1F2E29;
-  --color-text: #D6E2DD;
-  --color-muted: #8FB5A6;
-  --color-accent: #2DD4A8;
-  --color-warn: #F2C14E;
-  --color-danger: #F87171;
+  --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Fraunces', ui-serif, Georgia, serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  --color-bg: #0e1513;
+  --color-surface: #121c19;
+  --color-surface-2: #16221e;
+  --color-border: #1f2e29;
+  --color-text: #d6e2dd;
+  --color-muted: #8fb5a6;
+  --color-accent: #2dd4a8;
+  --color-warn: #f2c14e;
+  --color-danger: #f87171;
 
   /* Overriding shadcn defaults to use our design tokens */
   --color-background: var(--color-bg);
   --color-foreground: var(--color-text);
-  
+
   --color-card: var(--color-surface);
   --color-card-foreground: var(--color-text);
-  
+
   --color-popover: var(--color-surface-2);
   --color-popover-foreground: var(--color-text);
-  
+
   --color-primary: var(--color-accent);
   --color-primary-foreground: var(--color-bg);
-  
+
   --color-secondary: var(--color-surface-2);
   --color-secondary-foreground: var(--color-text);
-  
+
   --color-destructive: var(--color-danger);
   --color-destructive-foreground: var(--color-bg);
 
@@ -40,15 +40,20 @@
 
 @layer base {
   body {
-    @apply bg-bg text-text font-sans antialiased selection:bg-accent/30 selection:text-accent;
+    @apply bg-bg text-text selection:bg-accent/30 selection:text-accent font-sans antialiased;
   }
-  
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-serif text-text;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply text-text font-serif;
   }
 
   /* Accessibility focus rings */
   *:focus-visible {
-    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-bg;
+    @apply ring-accent ring-offset-bg ring-2 ring-offset-2 outline-none;
   }
 }

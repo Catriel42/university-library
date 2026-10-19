@@ -24,7 +24,11 @@ function extractToken(req: Request): string | null {
   return null;
 }
 
-export function requireAuth(req: Request, res: Response, next: NextFunction): void {
+export function requireAuth(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   const token = extractToken(req);
 
   if (!token) {
@@ -57,7 +61,11 @@ export function requireAuth(req: Request, res: Response, next: NextFunction): vo
   next();
 }
 
-export function optionalAuth(req: Request, _res: Response, next: NextFunction): void {
+export function optionalAuth(
+  req: Request,
+  _res: Response,
+  next: NextFunction
+): void {
   const token = extractToken(req);
 
   if (token) {

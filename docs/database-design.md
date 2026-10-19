@@ -9,7 +9,7 @@ erDiagram
     User ||--o{ Loan : "makes"
     User ||--o{ Reservation : "places"
     User ||--o{ ReadingStatus : "tracks"
-    
+
     Work ||--o{ Loan : "has"
     Work ||--o{ Reservation : "has"
     Work ||--o{ ReadingStatus : "has"
@@ -69,7 +69,7 @@ erDiagram
     User ||--o{ Loan : "1 to Many"
     User ||--o{ Reservation : "1 to Many"
     User ||--o{ ReadingStatus : "1 to Many"
-    
+
     Work ||--o{ Loan : "1 to Many"
     Work ||--o{ Reservation : "1 to Many"
     Work ||--o{ ReadingStatus : "1 to Many"

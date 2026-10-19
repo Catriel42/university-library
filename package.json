@@ -4,12 +4,16 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "dev": "pnpm -r --parallel dev",
     "dev:frontend": "pnpm --filter @university-library/frontend dev",
     "dev:backend": "pnpm --filter @university-library/backend dev",
     "build:frontend": "pnpm --filter @university-library/frontend build",
     "build:backend": "pnpm --filter @university-library/backend build",
     "build": "pnpm -r run build",
-    "lint": "pnpm -r lint"
+    "typecheck": "pnpm --filter @university-library/shared exec tsc --noEmit && pnpm --filter @university-library/backend exec tsc --noEmit && pnpm --filter @university-library/frontend exec tsc -b --noEmit",
+    "lint": "pnpm -r lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "pnpm": {
     "onlyBuiltDependencies": [
@@ -19,5 +23,9 @@
       "@prisma/client",
       "workerd"
     ]
+  },
+  "devDependencies": {
+    "prettier": "^3.9.10",
+    "prettier-plugin-tailwindcss": "^0.8.1"
   }
 }

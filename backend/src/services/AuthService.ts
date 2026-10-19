@@ -1,5 +1,10 @@
 import bcrypt from 'bcryptjs';
-import { ErrorCode, type RegisterRequestDTO, type LoginRequestDTO, type UserDTO } from '@university-library/shared';
+import {
+  ErrorCode,
+  type RegisterRequestDTO,
+  type LoginRequestDTO,
+  type UserDTO,
+} from '@university-library/shared';
 import { prisma } from '../lib/prisma.js';
 import { signToken } from '../lib/jwt.js';
 
@@ -16,7 +21,9 @@ export class AuthError extends Error {
 
 const BCRYPT_SALT_ROUNDS = 10;
 
-async function register(data: RegisterRequestDTO): Promise<{ user: UserDTO; token: string }> {
+async function register(
+  data: RegisterRequestDTO
+): Promise<{ user: UserDTO; token: string }> {
   const normalizedEmail = data.email.trim().toLowerCase();
   const trimmedName = data.name.trim();
 
@@ -59,7 +66,9 @@ async function register(data: RegisterRequestDTO): Promise<{ user: UserDTO; toke
   };
 }
 
-async function login(data: LoginRequestDTO): Promise<{ user: UserDTO; token: string }> {
+async function login(
+  data: LoginRequestDTO
+): Promise<{ user: UserDTO; token: string }> {
   const normalizedEmail = data.email.trim().toLowerCase();
 
   const user = await prisma.user.findUnique({
@@ -74,7 +83,10 @@ async function login(data: LoginRequestDTO): Promise<{ user: UserDTO; token: str
     );
   }
 
-  const isPasswordValid = await bcrypt.compare(data.password, user.passwordHash);
+  const isPasswordValid = await bcrypt.compare(
+    data.password,
+    user.passwordHash
+  );
 
   if (!isPasswordValid) {
     throw new AuthError(
