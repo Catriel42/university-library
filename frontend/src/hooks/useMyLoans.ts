@@ -9,6 +9,7 @@ export interface UseMyLoansReturn {
   isLoading: boolean;
   errorMessage: string | null;
   handleReturnLoan: (loanId: string) => Promise<void>;
+  handleRenewLoan: (loanId: string) => Promise<void>;
   refresh: () => void;
 }
 
@@ -70,6 +71,20 @@ export function useMyLoans(): UseMyLoansReturn {
     }
   };
 
+  const handleRenewLoan = async (loanId: string) => {
+    try {
+      await apiClient.post<{ loan: LoanDTO }>(`/loans/${loanId}/renew`);
+      setRefreshTrigger((prev) => prev + 1);
+    } catch (err: unknown) {
+      let msg = 'Failed to renew loan. Please try again.';
+      if (axios.isAxiosError(err)) {
+        msg = err.response?.data?.error?.message || msg;
+      }
+      setErrorMessage(msg);
+      throw err;
+    }
+  };
+
   const refresh = () => {
     setRefreshTrigger((prev) => prev + 1);
   };
@@ -80,6 +95,7 @@ export function useMyLoans(): UseMyLoansReturn {
     isLoading,
     errorMessage,
     handleReturnLoan,
+    handleRenewLoan,
     refresh,
   };
 }

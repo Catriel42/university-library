@@ -15,6 +15,7 @@ export function MyLoansPage() {
     isLoading,
     errorMessage,
     handleReturnLoan,
+    handleRenewLoan,
   } = useMyLoans();
 
   return (
@@ -82,7 +83,12 @@ export function MyLoansPage() {
         ) : (
           <div className="flex flex-col gap-4">
             {activeLoans.map((loan) => (
-              <LoanCard key={loan.id} loan={loan} onReturn={handleReturnLoan} />
+              <LoanCard
+                key={loan.id}
+                loan={loan}
+                onReturn={handleReturnLoan}
+                onRenew={handleRenewLoan}
+              />
             ))}
           </div>
         )
