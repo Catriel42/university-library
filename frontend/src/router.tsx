@@ -2,13 +2,13 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { AppLayout } from '@/layouts/AppLayout';
 import { CatalogPage } from '@/pages/CatalogPage';
 import { AuthPage } from '@/pages/AuthPage';
-
-const BookDetailPage = () => <div className="py-20 text-center text-muted">Book Detail (Coming Soon)</div>;
-const MyLoansPage = () => <div className="py-20 text-center text-muted">My Loans (Coming Soon)</div>;
+import { BookDetailPage } from '@/pages/BookDetailPage';
+import { MyLoansPage } from '@/pages/MyLoansPage';
+import { ProtectedRoute } from '@/components/ProtectedRoute';
 
 export const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <AppLayout />,
     children: [
       {
@@ -16,21 +16,25 @@ export const router = createBrowserRouter([
         element: <CatalogPage />,
       },
       {
-        path: "book/:id",
+        path: 'book/:id',
         element: <BookDetailPage />,
       },
       {
-        path: "loans",
-        element: <MyLoansPage />,
+        path: 'loans',
+        element: (
+          <ProtectedRoute>
+            <MyLoansPage />
+          </ProtectedRoute>
+        ),
       },
       {
-        path: "login",
+        path: 'login',
         element: <AuthPage />,
       },
       {
-        path: "*",
+        path: '*',
         element: <Navigate to="/" replace />,
-      }
+      },
     ],
   },
 ]);

@@ -1,5 +1,16 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
-import type { UserDTO, RegisterRequestDTO, LoginRequestDTO, AuthResponseDTO } from '@university-library/shared';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  type ReactNode,
+} from 'react';
+import type {
+  UserDTO,
+  RegisterRequestDTO,
+  LoginRequestDTO,
+  AuthResponseDTO,
+} from '@university-library/shared';
 import { apiClient } from '@/lib/api';
 
 interface AuthContextType {
@@ -44,12 +55,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (credentials: LoginRequestDTO) => {
-    const response = await apiClient.post<AuthResponseDTO>('/auth/login', credentials);
+    const response = await apiClient.post<AuthResponseDTO>(
+      '/auth/login',
+      credentials
+    );
     setUser(response.data.user);
   };
 
   const register = async (data: RegisterRequestDTO) => {
-    const response = await apiClient.post<AuthResponseDTO>('/auth/register', data);
+    const response = await apiClient.post<AuthResponseDTO>(
+      '/auth/register',
+      data
+    );
     setUser(response.data.user);
   };
 
@@ -62,9 +79,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, register, logout }}>
+    <AuthContext value={{ user, isLoading, login, register, logout }}>
       {children}
-    </AuthContext.Provider>
+    </AuthContext>
   );
 }
 
