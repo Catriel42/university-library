@@ -1,109 +1,296 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useTransition } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Search, BookX } from 'lucide-react';
+import { BookX, AlertCircle, RefreshCw } from 'lucide-react';
 import { apiClient } from '@/lib/api';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import axios from 'axios';
+import { useSearchParams } from 'react-router-dom';
 import type { WorkDTO, SearchResponseDTO } from '@university-library/shared';
 
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { CopyPips } from '@/components/CopyPips';
+import { BookCard } from '@/components/catalog/BookCard';
+import { CategoryFilterBar } from '@/components/catalog/CategoryFilterBar';
+import { CatalogSearchForm } from '@/components/catalog/CatalogSearchForm';
+import { CatalogToolbar } from '@/components/catalog/CatalogToolbar';
+import { CatalogPagination } from '@/components/catalog/CatalogPagination';
+
+const PAGE_SIZE = 12;
 
 export function CatalogPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
-  
+  const [, startTransition] = useTransition();
+
   const queryParam = searchParams.get('q') || '';
-  
-  const [query, setQuery] = useState(queryParam);
-  const [isSearching, setIsSearching] = useState(Boolean(queryParam));
-  const [hasSearched, setHasSearched] = useState(Boolean(queryParam));
+  const fieldParam = searchParams.get('field') || 'q';
+  const subjectParam = searchParams.get('subject') || '';
+  const sortParam = searchParams.get('sort') || 'relevance';
+  const pageParam = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1);
+  const hideUnavailableParam = searchParams.get('hideUnavailable') === 'true';
+
+  const [prevQueryParam, setPrevQueryParam] = useState(queryParam);
+  const [inputQuery, setInputQuery] = useState(queryParam);
+
+  if (prevQueryParam !== queryParam) {
+    setPrevQueryParam(queryParam);
+    setInputQuery(queryParam);
+  }
+
   const [results, setResults] = useState<WorkDTO[]>([]);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [numFound, setNumFound] = useState(0);
+  const [authorSortScope, setAuthorSortScope] = useState<'exact' | 'page' | undefined>(undefined);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
+  const [retryTrigger, setRetryTrigger] = useState(0);
+
+  const hasSearched = Boolean(queryParam.trim() || subjectParam);
+  const resultsRef = useRef<HTMLDivElement>(null);
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    let ignore = false;
-    
-    if (queryParam) {
-      const fetchData = async () => {
-        try {
-          const response = await apiClient.get<SearchResponseDTO>('/books', {
-            params: { q: queryParam, limit: 12 }
-          });
-          if (!ignore) setResults(response.data.docs);
-        } catch (error) {
-          console.error('Search failed:', error);
-        } finally {
-          if (!ignore) setIsSearching(false);
-        }
-      };
-      
-      fetchData();
+    if (!queryParam.trim() && !subjectParam) {
+      return;
     }
-    
-    return () => { ignore = true; };
-  }, [queryParam]);
 
-  const handleSearchSubmit = (formData: FormData) => {
-    const queryValue = formData.get('searchQuery')?.toString();
-    if (!queryValue?.trim()) return;
-    
-    setIsSearching(true);
-    setHasSearched(true);
-    setResults([]);
-    
-    setSearchParams({ q: queryValue });
+    const controller = new AbortController();
+
+    const requestParams: Record<string, string | number> = {
+      limit: PAGE_SIZE,
+      page: pageParam,
+    };
+
+    if (queryParam.trim()) {
+      if (fieldParam === 'title') {
+        requestParams.title = queryParam.trim();
+      } else if (fieldParam === 'author') {
+        requestParams.author = queryParam.trim();
+      } else {
+        requestParams.q = queryParam.trim();
+      }
+    }
+
+    if (subjectParam) {
+      requestParams.subject = subjectParam;
+    }
+
+    if (sortParam && sortParam !== 'relevance') {
+      requestParams.sort = sortParam;
+    }
+
+    const fetchBooks = async () => {
+      setIsSearching(true);
+      setSearchError(null);
+      try {
+        const response = await apiClient.get<SearchResponseDTO>('/books', {
+          params: requestParams,
+          signal: controller.signal,
+        });
+
+        setResults(response.data.docs);
+        setNumFound(response.data.numFound);
+        setAuthorSortScope(response.data.authorSortScope);
+      } catch (err: unknown) {
+        if (axios.isCancel(err)) {
+          return;
+        }
+        setSearchError('Unable to load catalog results from Open Library. Please check your connection and retry.');
+        setResults([]);
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsSearching(false);
+        }
+      }
+    };
+
+    fetchBooks();
+
+    return () => {
+      controller.abort();
+    };
+  }, [queryParam, fieldParam, subjectParam, sortParam, pageParam, retryTrigger]);
+
+  const updateSearchQuery = (newQuery: string) => {
+    setInputQuery(newQuery);
+
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    debounceTimerRef.current = setTimeout(() => {
+      startTransition(() => {
+        setSearchParams((prev) => {
+          const next = new URLSearchParams(prev);
+          const trimmed = newQuery.trim();
+          if (trimmed) {
+            next.set('q', trimmed);
+          } else {
+            next.delete('q');
+          }
+          next.set('page', '1');
+          return next;
+        });
+      });
+    }, 450);
   };
+
+  const handleExplicitSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      const trimmed = inputQuery.trim();
+      if (trimmed) {
+        next.set('q', trimmed);
+      } else {
+        next.delete('q');
+      }
+      next.set('page', '1');
+      return next;
+    });
+  };
+
+  const handleClearQuery = () => {
+    setInputQuery('');
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.delete('q');
+      next.set('page', '1');
+      return next;
+    });
+  };
+
+  const handleFieldChange = (newField: string) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (newField === 'q') {
+        next.delete('field');
+      } else {
+        next.set('field', newField);
+      }
+      next.set('page', '1');
+      return next;
+    });
+  };
+
+  const handleCategorySelect = (categoryId: string) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (categoryId) {
+        next.set('subject', categoryId);
+      } else {
+        next.delete('subject');
+      }
+      next.set('page', '1');
+      return next;
+    });
+  };
+
+  const handleSortChange = (newSort: string) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (newSort === 'relevance') {
+        next.delete('sort');
+      } else {
+        next.set('sort', newSort);
+      }
+      next.set('page', '1');
+      return next;
+    });
+  };
+
+  const handleToggleHideUnavailable = () => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (!hideUnavailableParam) {
+        next.set('hideUnavailable', 'true');
+      } else {
+        next.delete('hideUnavailable');
+      }
+      return next;
+    });
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.set('page', String(newPage));
+      return next;
+    });
+    resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const totalPages = Math.max(1, Math.ceil(numFound / PAGE_SIZE));
+  const displayedResults = hideUnavailableParam
+    ? results.filter((book) => book.availableCopies > 0)
+    : results;
 
   return (
     <div className="w-full flex flex-col items-center">
-      <div className="max-w-2xl mx-auto w-full text-center mb-16 mt-4">
+      <div className="max-w-3xl mx-auto w-full text-center mb-8 mt-2">
         <h1 className="text-4xl md:text-5xl font-serif mb-4 leading-tight text-text">
           Search the catalog
         </h1>
-        <p className="text-muted text-lg font-sans mb-8">
-          Millions of texts, journals, and academic books at your fingertips.
+        <p className="text-muted text-base md:text-lg font-sans mb-8">
+          Browse university collections, check copy availability in real-time, and borrow books instantly.
         </p>
 
-        <form
-          action={handleSearchSubmit}
-          className="relative w-full group"
-        >
-          <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-            <Search className="text-muted group-focus-within:text-accent transition-colors" size={20} />
-          </div>
-          <input
-            ref={inputRef}
-            name="searchQuery"
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Find by title, author, or ISBN..."
-            className="w-full bg-surface border border-border rounded-full py-4 pl-12 pr-[100px] text-text placeholder:text-muted focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all text-base shadow-sm"
-            disabled={isSearching}
-          />
-          <Button 
-            type="submit"
-            disabled={isSearching || !query.trim()}
-            className="absolute inset-y-1.5 right-1.5 rounded-full px-5 bg-accent text-bg hover:bg-accent/80 transition-colors disabled:opacity-50"
-          >
-            {isSearching ? 'Searching...' : 'Search'}
-          </Button>
-        </form>
+        <CatalogSearchForm
+          inputQuery={inputQuery}
+          fieldParam={fieldParam}
+          onQueryChange={updateSearchQuery}
+          onFieldChange={handleFieldChange}
+          onClearQuery={handleClearQuery}
+          onSubmit={handleExplicitSubmit}
+        />
+
+        <CategoryFilterBar
+          selectedSubject={subjectParam}
+          onSelectCategory={handleCategorySelect}
+        />
       </div>
 
-      <div className="w-full">
+      <div ref={resultsRef} className="w-full">
         {hasSearched && (
-          <div className="mb-8 flex justify-between items-end border-b border-border pb-4">
-            <h2 className="text-2xl font-serif text-text">Results for "{query}"</h2>
-            <span className="text-mono text-sm text-muted">{results.length} items</span>
-          </div>
+          <CatalogToolbar
+            queryParam={queryParam}
+            subjectParam={subjectParam}
+            numFound={numFound}
+            displayedCount={displayedResults.length}
+            hideUnavailable={hideUnavailableParam}
+            authorSortScope={authorSortScope}
+            sortParam={sortParam}
+            onToggleHideUnavailable={handleToggleHideUnavailable}
+            onSortChange={handleSortChange}
+          />
         )}
 
         <AnimatePresence mode="wait">
-          {isSearching ? (
-            <motion.div 
+          {searchError ? (
+            <motion.div
+              key="error"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className="w-full flex flex-col items-center py-16 px-4 text-center border border-danger/30 rounded-2xl bg-danger/5"
+            >
+              <AlertCircle className="text-danger mb-3" size={40} />
+              <h3 className="text-xl font-serif text-text mb-2">Search Error</h3>
+              <p className="text-muted max-w-md text-sm mb-6">{searchError}</p>
+              <Button
+                variant="outline"
+                onClick={() => setRetryTrigger((prev) => prev + 1)}
+                className="flex items-center gap-2 border-border hover:border-accent text-text"
+              >
+                <RefreshCw size={14} />
+                <span>Retry Search</span>
+              </Button>
+            </motion.div>
+          ) : isSearching ? (
+            <motion.div
               key="loading"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -119,8 +306,8 @@ export function CatalogPage() {
                 </div>
               ))}
             </motion.div>
-          ) : !isSearching && hasSearched && results.length === 0 ? (
-            <motion.div 
+          ) : !isSearching && hasSearched && displayedResults.length === 0 ? (
+            <motion.div
               key="empty"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -128,79 +315,38 @@ export function CatalogPage() {
             >
               <BookX className="text-muted mb-4 opacity-50" size={48} />
               <h3 className="text-xl font-serif text-text mb-2">No matching items found</h3>
-              <p className="text-muted max-w-md">
-                We couldn't find any books matching your query. Try a different term or check your spelling.
+              <p className="text-muted max-w-md text-sm">
+                We couldn't find any books matching your query and filters. Try adjusting your search term, clearing category filters, or showing unavailable copies.
               </p>
             </motion.div>
           ) : (
-            <motion.div 
+            <motion.div
               key="results"
               className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 w-full"
             >
-              {results.map((book, index) => (
+              {displayedResults.map((book, index) => (
                 <motion.div
                   key={book.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.04, ease: "easeOut", duration: 0.3 }}
+                  transition={{ delay: index * 0.03, ease: 'easeOut', duration: 0.25 }}
                   className="group h-full"
                 >
-                  <Card 
-                    onClick={() => navigate(`/book/${encodeURIComponent(book.id)}`)}
-                    className="bg-surface border-border overflow-hidden rounded-2xl hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(45,212,168,0.1)] hover:border-accent/30 transition-all duration-300 h-full flex flex-col cursor-pointer"
-                  >
-                    
-                    <div className="w-full aspect-[2/3] relative bg-surface-2 border-b border-border overflow-hidden shrink-0">
-                      {book.coverId ? (
-                        <img 
-                          src={`https://covers.openlibrary.org/b/id/${book.coverId}-L.jpg`} 
-                          alt={`Cover of ${book.title}`}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                          loading="lazy"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-surface to-border flex items-center justify-center p-6 text-center">
-                          <span className="font-serif text-muted/60 text-lg line-clamp-4 leading-snug">
-                            {book.title}
-                          </span>
-                        </div>
-                      )}
-                      
-                      {book.availableCopies === 0 && (
-                        <div className="absolute top-2 right-2 bg-surface-2/90 backdrop-blur border border-border px-2 py-1 rounded-md">
-                          <span className="text-[10px] uppercase tracking-wider font-mono text-warn">Waitlist</span>
-                        </div>
-                      )}
-                    </div>
-                    
-                    <div className="p-4 flex flex-col flex-1">
-                      <h3 className="font-serif text-text text-base leading-tight line-clamp-2 mb-1 group-hover:text-accent transition-colors">
-                        {book.title}
-                      </h3>
-                      <p className="text-sm font-sans text-muted line-clamp-1 mb-4">
-                        {book.firstAuthor || 'Unknown Author'}
-                      </p>
-                      
-                      <div className="mt-auto pt-2 flex items-center justify-between">
-                        <CopyPips total={book.totalCopies} available={book.availableCopies} />
-                        
-                        {book.availableCopies > 0 ? (
-                          <Button size="sm" variant="ghost" className="h-7 text-xs text-accent hover:bg-accent/10 px-2 ml-auto" onClick={(e) => { e.stopPropagation(); console.log('Borrow', book.id); }}>
-                            Borrow
-                          </Button>
-                        ) : (
-                          <Button size="sm" variant="ghost" className="h-7 text-xs text-muted hover:bg-surface-2 px-2 ml-auto" onClick={(e) => { e.stopPropagation(); console.log('Hold', book.id); }}>
-                            Place hold
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  </Card>
+                  <BookCard book={book} />
                 </motion.div>
               ))}
             </motion.div>
           )}
         </AnimatePresence>
+
+        {hasSearched && (
+          <CatalogPagination
+            currentPage={pageParam}
+            totalPages={totalPages}
+            totalFound={numFound}
+            onPageChange={handlePageChange}
+          />
+        )}
       </div>
     </div>
   );
