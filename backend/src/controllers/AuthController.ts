@@ -1,37 +1,17 @@
 import type { Request, Response, NextFunction } from 'express';
-import { z } from 'zod';
-import { ErrorCode } from '@university-library/shared';
+import {
+  ErrorCode,
+  registerSchema,
+  loginSchema,
+} from '@university-library/shared';
 import { AuthService, AuthError } from '../services/AuthService.js';
 import { setAuthCookie, clearAuthCookie } from '../lib/cookies.js';
 
-const registerSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(2, 'Name must be at least 2 characters long')
-    .max(100, 'Name cannot exceed 100 characters'),
-  email: z
-    .string()
-    .trim()
-    .email('Please enter a valid email address')
-    .max(255, 'Email cannot exceed 255 characters'),
-  password: z
-    .string()
-    .min(8, 'Password must be at least 8 characters long')
-    .max(128, 'Password cannot exceed 128 characters'),
-});
-
-const loginSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .email('Please enter a valid email address'),
-  password: z
-    .string()
-    .min(1, 'Password is required'),
-});
-
-async function register(req: Request, res: Response, next: NextFunction): Promise<void> {
+async function register(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   const parsed = registerSchema.safeParse(req.body);
 
   if (!parsed.success) {
@@ -66,7 +46,11 @@ async function register(req: Request, res: Response, next: NextFunction): Promis
   }
 }
 
-async function login(req: Request, res: Response, next: NextFunction): Promise<void> {
+async function login(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   const parsed = loginSchema.safeParse(req.body);
 
   if (!parsed.success) {
@@ -108,7 +92,11 @@ async function logout(_req: Request, res: Response): Promise<void> {
   });
 }
 
-async function me(req: Request, res: Response, next: NextFunction): Promise<void> {
+async function me(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   if (!req.user) {
     res.status(401).json({
       error: {
