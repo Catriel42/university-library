@@ -20,13 +20,13 @@ export enum ErrorCode {
   EMAIL_IN_USE = 'EMAIL_IN_USE',
   WEAK_PASSWORD = 'WEAK_PASSWORD',
   BAD_REQUEST = 'BAD_REQUEST',
-  INTERNAL_ERROR = 'INTERNAL_ERROR'
+  INTERNAL_ERROR = 'INTERNAL_ERROR',
 }
 
 // Reading Status matches backend/prisma schema enum ReadingState
 export enum ReadingStatus {
   READING = 'READING',
-  COMPLETED = 'COMPLETED'
+  COMPLETED = 'COMPLETED',
 }
 
 // Data Transfer Objects (DTOs)
@@ -67,3 +67,40 @@ export interface SearchResponseDTO {
   docs: WorkDTO[];
   authorSortScope?: 'exact' | 'page';
 }
+
+export interface BookDetailDTO {
+  id: string;
+  title: string;
+  description?: string;
+  covers?: number[];
+  coverId?: number;
+  subjects?: string[];
+  firstAuthor?: string;
+  firstPublishYear?: number;
+  totalCopies: number;
+  availableCopies: number;
+  queueLength: number;
+  earliestReturnDate?: string | null;
+}
+
+export interface LoanDTO {
+  id: string;
+  userId: string;
+  workId: string;
+  title: string;
+  firstAuthor?: string;
+  coverId?: number;
+  borrowedAt: string;
+  dueDate: string;
+  returnedAt?: string | null;
+  status: 'ACTIVE' | 'RETURNED';
+  renewals: number;
+  daysRemaining?: number;
+  daysOverdue?: number;
+}
+
+export interface BorrowRequestDTO {
+  workKey: string;
+}
+
+export * from './schemas/auth.js';
