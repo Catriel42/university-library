@@ -28,6 +28,18 @@ export function AppLayout() {
               >
                 My Loans
               </Link>
+              <Link
+                to="/reservations"
+                className={`text-muted hover:text-text hidden font-sans md:flex ${buttonVariants({ variant: 'ghost' })}`}
+              >
+                Reservations
+              </Link>
+              <Link
+                to="/my-books"
+                className={`text-muted hover:text-text hidden font-sans md:flex ${buttonVariants({ variant: 'ghost' })}`}
+              >
+                My Books
+              </Link>
               <div className="bg-surface border-border text-text flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm">
                 <UserIcon size={14} className="text-accent" />
                 <span className="max-w-[120px] truncate font-sans font-medium">
@@ -61,7 +73,7 @@ export function AppLayout() {
       <footer className="border-border mt-auto w-full border-t py-8">
         <div className="text-muted mx-auto flex max-w-[1200px] items-center justify-between px-4 text-sm md:px-8">
           <span>&copy; {new Date().getFullYear()} University Library</span>
-          <span className="font-mono text-xs">System Status: Online</span>
+          <span className="font-mono text-xs">catodev_</span>
         </div>
       </footer>
     </div>

@@ -4,6 +4,8 @@ import { CatalogPage } from '@/pages/CatalogPage';
 import { AuthPage } from '@/pages/AuthPage';
 import { BookDetailPage } from '@/pages/BookDetailPage';
 import { MyLoansPage } from '@/pages/MyLoansPage';
+import { MyReservationsPage } from '@/pages/MyReservationsPage';
+import { MyBooksPage } from '@/pages/MyBooksPage';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 
 export const router = createBrowserRouter([
@@ -24,6 +26,22 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <MyLoansPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'reservations',
+        element: (
+          <ProtectedRoute>
+            <MyReservationsPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'my-books',
+        element: (
+          <ProtectedRoute>
+            <MyBooksPage />
           </ProtectedRoute>
         ),
       },
