@@ -65,15 +65,18 @@ async function fetchJson<T>(url: string, schema: z.ZodType<T>): Promise<T> {
 
     const data = schema.parse(await response.json());
     return data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof OpenLibraryError) throw error;
-    if (error.name === 'TimeoutError') {
-      throw new OpenLibraryError('Open Library request timed out', 504);
-    }
     if (error instanceof z.ZodError) {
       throw new OpenLibraryError('Invalid response format from Open Library', 502);
     }
-    throw new OpenLibraryError(error.message || 'Unknown Open Library error', 500);
+    if (error instanceof Error) {
+      if (error.name === 'TimeoutError') {
+        throw new OpenLibraryError('Open Library request timed out', 504);
+      }
+      throw new OpenLibraryError(error.message, 500);
+    }
+    throw new OpenLibraryError('Unknown Open Library error', 500);
   }
 }
 

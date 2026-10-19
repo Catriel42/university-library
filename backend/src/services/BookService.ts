@@ -20,6 +20,7 @@ export type EnrichedDoc = SearchDoc & {
 
 export type BookSearchResult = Omit<OpenLibrarySearchResponse, 'docs'> & {
   docs: EnrichedDoc[];
+  authorSortScope?: 'exact' | 'page';
 };
 
 const toCleanKey = (key: string): string => key.replace(WORK_KEY_PREFIX, '');
@@ -75,8 +76,110 @@ async function getAvailabilityForWorks(workKeys: string[]): Promise<Record<strin
  * Searches Open Library and merges in local availability.
  * Does not mutate the cached objects: it builds new ones.
  */
-async function searchBooks(query: Record<string, string>): Promise<BookSearchResult> {
-  const olData = await OpenLibraryService.searchBooks(query);
+export interface BookSearchParams {
+  q?: string;
+  title?: string;
+  author?: string;
+  subject?: string;
+  sort?: string;
+  page?: string | number;
+  limit?: string | number;
+  lang?: string;
+}
+
+const SORT_MAPPING: Record<string, string | undefined> = {
+  relevance: undefined,
+  popular: 'readinglog',
+  readinglog: 'readinglog',
+  rating: 'rating desc',
+  newest: 'new',
+  new: 'new',
+  oldest: 'old',
+  old: 'old',
+  title: 'title',
+};
+
+async function searchBooks(query: BookSearchParams): Promise<BookSearchResult> {
+  const requestedPage = Math.max(1, Number(query.page) || 1);
+  const requestedLimit = Math.min(100, Math.max(1, Number(query.limit) || 20));
+  const rawSort = query.sort?.trim().toLowerCase();
+
+  const stringParams: Record<string, string> = {};
+  for (const [key, value] of Object.entries(query)) {
+    if (value !== undefined) {
+      stringParams[key] = String(value);
+    }
+  }
+
+  let olData: OpenLibrarySearchResponse;
+  let authorSortScope: 'exact' | 'page' | undefined = undefined;
+
+  if (rawSort === 'author') {
+    const cleanParams = { ...stringParams };
+    delete cleanParams.sort;
+
+    const initialFetch = await OpenLibraryService.searchBooks({
+      ...cleanParams,
+      limit: '100',
+      page: '1',
+    });
+
+    if (initialFetch.numFound <= 100) {
+      const sortedDocs = [...initialFetch.docs].sort((a, b) => {
+        const authorA = a.author_name?.[0] ?? '';
+        const authorB = b.author_name?.[0] ?? '';
+        return authorA.localeCompare(authorB);
+      });
+      const startIdx = (requestedPage - 1) * requestedLimit;
+      const pagedDocs = sortedDocs.slice(startIdx, startIdx + requestedLimit);
+      olData = {
+        ...initialFetch,
+        start: startIdx,
+        docs: pagedDocs,
+      };
+      authorSortScope = 'exact';
+    } else {
+      let pageDocs: OpenLibrarySearchResponse['docs'];
+      let startIdx = (requestedPage - 1) * requestedLimit;
+
+      if (requestedPage === 1 && requestedLimit <= 100) {
+        pageDocs = initialFetch.docs.slice(0, requestedLimit);
+      } else {
+        const pageFetch = await OpenLibraryService.searchBooks({
+          ...cleanParams,
+          limit: String(requestedLimit),
+          page: String(requestedPage),
+        });
+        pageDocs = pageFetch.docs;
+        startIdx = pageFetch.start;
+      }
+
+      const sortedDocs = [...pageDocs].sort((a, b) => {
+        const authorA = a.author_name?.[0] ?? '';
+        const authorB = b.author_name?.[0] ?? '';
+        return authorA.localeCompare(authorB);
+      });
+
+      olData = {
+        numFound: initialFetch.numFound,
+        start: startIdx,
+        docs: sortedDocs,
+      };
+      authorSortScope = 'page';
+    }
+  } else {
+    const params = { ...stringParams };
+    if (rawSort) {
+      const mappedSort = SORT_MAPPING[rawSort];
+      if (mappedSort) {
+        params.sort = mappedSort;
+      } else {
+        delete params.sort;
+      }
+    }
+    olData = await OpenLibraryService.searchBooks(params);
+  }
+
   const availability = await getAvailabilityForWorks(olData.docs.map((doc) => toCleanKey(doc.key)));
 
   const docs: EnrichedDoc[] = olData.docs.map((doc) => {
@@ -88,7 +191,7 @@ async function searchBooks(query: Record<string, string>): Promise<BookSearchRes
     return { ...doc, cleanKey, totalCopies: total, availableCopies: available };
   });
 
-  return { ...olData, docs };
+  return { ...olData, docs, authorSortScope };
 }
 
 export const BookService = { getAvailabilityForWorks, searchBooks };
