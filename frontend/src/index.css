@@ -39,19 +39,17 @@
   --color-ring: var(--color-accent);
 }
 
-/* Light mode overrides */
-@theme {
-  .light {
-    --color-bg: #f8faf9;
-    --color-surface: #ffffff;
-    --color-surface-2: #f1f4f3;
-    --color-border: #d1e0db;
-    --color-text: #0e1513;
-    --color-muted: #5a7a6f;
-    --color-accent: #1ea382;
-    --color-warn: #d4a729;
-    --color-danger: #dc2626;
-  }
+/* Light mode overrides (outside @theme) */
+.light {
+  --color-bg: #f8faf9;
+  --color-surface: #ffffff;
+  --color-surface-2: #f1f4f3;
+  --color-border: #d1e0db;
+  --color-text: #0e1513;
+  --color-muted: #5a7a6f;
+  --color-accent: #1ea382;
+  --color-warn: #d4a729;
+  --color-danger: #dc2626;
 }
 
 @layer base {
