@@ -52,10 +52,11 @@ export interface AuthResponseDTO {
 }
 
 export interface WorkDTO {
-  id: string; // Open Library key
+  id: string;
   title: string;
   firstAuthor?: string;
   coverId?: number;
+  firstPublishYear?: number;
   totalCopies: number;
   availableCopies: number;
 }
@@ -64,4 +65,5 @@ export interface SearchResponseDTO {
   numFound: number;
   start: number;
   docs: WorkDTO[];
+  authorSortScope?: 'exact' | 'page';
 }
