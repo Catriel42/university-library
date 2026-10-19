@@ -13,11 +13,12 @@ Se ha implementado un sistema completo de Dark/Light mode siguiendo los patrones
 **Context Provider** para manejar el tema global:
 
 ```tsx
-export function ThemeProvider({ children }: { children: ReactNode })
-export function useTheme(): ThemeContextType
+export function ThemeProvider({ children }: { children: ReactNode });
+export function useTheme(): ThemeContextType;
 ```
 
 **Características:**
+
 - ✅ Detecta preferencia del sistema (`prefers-color-scheme`)
 - ✅ Guarda en `localStorage` la preferencia del usuario
 - ✅ Inicializa con el último tema usado
@@ -25,6 +26,7 @@ export function useTheme(): ThemeContextType
 - ✅ Hook `useTheme()` con validación de contexto
 
 **Lógica de inicialización:**
+
 1. Busca en `localStorage` → `'university-library-theme'`
 2. Si no existe, detecta preferencia del sistema
 3. Default: `'dark'` (mantiene el tema actual del proyecto)
@@ -36,10 +38,11 @@ export function useTheme(): ThemeContextType
 **Botón toggle** con iconos animados:
 
 ```tsx
-export function ThemeToggle()
+export function ThemeToggle();
 ```
 
 **Características:**
+
 - ✅ Iconos `Sun` y `Moon` de `lucide-react`
 - ✅ Animación de rotación + fade (300ms)
 - ✅ Estilo consistente con el design system
@@ -48,6 +51,7 @@ export function ThemeToggle()
 - ✅ Clases: `border-border`, `bg-surface`, `text-accent`
 
 **Animación:**
+
 - Dark → Light: Moon rota -90° y desaparece, Sun aparece
 - Light → Dark: Sun rota 90° y desaparece, Moon aparece
 
@@ -58,22 +62,22 @@ export function ThemeToggle()
 ### 3. `frontend/src/index.css`
 
 **Añadido:**
+
 - Tokens de color para Light Mode en `@theme { .light { ... } }`
 
 **Colores Light Mode:**
+
 ```css
---color-bg: #f8faf9          (fondo claro)
---color-surface: #ffffff      (blanco)
---color-surface-2: #f1f4f3    (gris muy claro)
---color-border: #d1e0db       (borde claro)
---color-text: #0e1513         (texto oscuro)
---color-muted: #5a7a6f        (muted oscuro)
---color-accent: #1ea382       (accent más oscuro)
---color-warn: #d4a729         (warn ajustado)
---color-danger: #dc2626       (danger estándar)
+--color-bg: #f8faf9 (fondo claro) --color-surface: #ffffff (blanco)
+  --color-surface-2: #f1f4f3 (gris muy claro) --color-border: #d1e0db
+  (borde claro) --color-text: #0e1513 (texto oscuro) --color-muted: #5a7a6f
+  (muted oscuro) --color-accent: #1ea382 (accent más oscuro)
+  --color-warn: #d4a729 (warn ajustado) --color-danger: #dc2626
+  (danger estándar);
 ```
 
 **Ventaja:**
+
 - Todos los componentes usan tokens CSS variables
 - El cambio de tema es instantáneo sin necesidad de re-renderizar
 
@@ -82,6 +86,7 @@ export function ThemeToggle()
 ### 4. `frontend/src/App.tsx`
 
 **Cambio:**
+
 ```tsx
 // Antes
 <AuthProvider>
@@ -97,6 +102,7 @@ export function ThemeToggle()
 ```
 
 **Orden de Providers:**
+
 1. `ThemeProvider` (más externo - afecta toda la app)
 2. `AuthProvider` (contexto de usuario)
 3. `RouterProvider` (rutas)
@@ -106,12 +112,14 @@ export function ThemeToggle()
 ### 5. `frontend/src/layouts/AppLayout.tsx`
 
 **Cambio:**
+
 ```tsx
 // Añadido en navbar, después de los botones de usuario:
 <ThemeToggle />
 ```
 
 **Ubicación:**
+
 - Lado derecho del navbar
 - Después de "Sign Out" (usuario autenticado)
 - Después de "Sign In" (usuario anónimo)
@@ -140,6 +148,7 @@ export function ThemeToggle()
 ### Persistencia
 
 **LocalStorage Key:**
+
 ```
 'university-library-theme' → 'light' | 'dark'
 ```
@@ -157,15 +166,15 @@ export function ThemeToggle()
 
 ### Usa los mismos patrones:
 
-| Patrón | Implementación |
-|--------|----------------|
-| **Context API** | Igual que `AuthContext` |
-| **Hook personalizado** | `useTheme()` con validación |
-| **Clases utility** | `cn()` de `@/lib/utils` |
-| **Tokens CSS** | Variables `--color-*` |
-| **Lucide icons** | `Sun`, `Moon` |
+| Patrón                  | Implementación                               |
+| ----------------------- | -------------------------------------------- |
+| **Context API**         | Igual que `AuthContext`                      |
+| **Hook personalizado**  | `useTheme()` con validación                  |
+| **Clases utility**      | `cn()` de `@/lib/utils`                      |
+| **Tokens CSS**          | Variables `--color-*`                        |
+| **Lucide icons**        | `Sun`, `Moon`                                |
 | **Estados hover/focus** | `hover:bg-surface-2`, `focus-visible:ring-2` |
-| **Transiciones** | `transition-all duration-200/300` |
+| **Transiciones**        | `transition-all duration-200/300`            |
 
 ---
 
@@ -174,6 +183,7 @@ export function ThemeToggle()
 ### Verificar que funciona:
 
 1. **Carga inicial:**
+
    ```bash
    # Abrir dev tools → Application → Local Storage
    # Debe estar vacío en primera visita
@@ -181,6 +191,7 @@ export function ThemeToggle()
    ```
 
 2. **Toggle:**
+
    ```bash
    # Click en el botón
    # localStorage['university-library-theme'] = 'light' o 'dark'
@@ -188,6 +199,7 @@ export function ThemeToggle()
    ```
 
 3. **Recarga:**
+
    ```bash
    # F5
    # Mantiene el tema elegido
@@ -205,19 +217,20 @@ export function ThemeToggle()
 
 ### Comparación:
 
-| Token | Dark Mode | Light Mode |
-|-------|-----------|------------|
-| `--color-bg` | `#0e1513` (casi negro) | `#f8faf9` (casi blanco) |
-| `--color-surface` | `#121c19` (verde oscuro) | `#ffffff` (blanco) |
-| `--color-surface-2` | `#16221e` (verde oscuro +) | `#f1f4f3` (gris claro) |
-| `--color-border` | `#1f2e29` (verde oliva oscuro) | `#d1e0db` (verde claro) |
-| `--color-text` | `#d6e2dd` (gris claro) | `#0e1513` (negro) |
-| `--color-muted` | `#8fb5a6` (verde grisáceo) | `#5a7a6f` (verde oscuro) |
-| `--color-accent` | `#2dd4a8` (verde brillante) | `#1ea382` (verde oscuro) |
-| `--color-warn` | `#f2c14e` (amarillo) | `#d4a729` (amarillo oscuro) |
-| `--color-danger` | `#f87171` (rojo claro) | `#dc2626` (rojo) |
+| Token               | Dark Mode                      | Light Mode                  |
+| ------------------- | ------------------------------ | --------------------------- |
+| `--color-bg`        | `#0e1513` (casi negro)         | `#f8faf9` (casi blanco)     |
+| `--color-surface`   | `#121c19` (verde oscuro)       | `#ffffff` (blanco)          |
+| `--color-surface-2` | `#16221e` (verde oscuro +)     | `#f1f4f3` (gris claro)      |
+| `--color-border`    | `#1f2e29` (verde oliva oscuro) | `#d1e0db` (verde claro)     |
+| `--color-text`      | `#d6e2dd` (gris claro)         | `#0e1513` (negro)           |
+| `--color-muted`     | `#8fb5a6` (verde grisáceo)     | `#5a7a6f` (verde oscuro)    |
+| `--color-accent`    | `#2dd4a8` (verde brillante)    | `#1ea382` (verde oscuro)    |
+| `--color-warn`      | `#f2c14e` (amarillo)           | `#d4a729` (amarillo oscuro) |
+| `--color-danger`    | `#f87171` (rojo claro)         | `#dc2626` (rojo)            |
 
 **Contraste:**
+
 - Dark: texto claro sobre fondo oscuro
 - Light: texto oscuro sobre fondo claro
 - Ambos cumplen WCAG AA
@@ -246,16 +259,19 @@ frontend/src/
 ### Si quieres extender en el futuro:
 
 1. **Tema automático (seguir sistema):**
+
    ```tsx
    type Theme = 'light' | 'dark' | 'system';
    ```
 
 2. **Más temas (ejemplo: high contrast):**
+
    ```tsx
    type Theme = 'light' | 'dark' | 'contrast';
    ```
 
 3. **Transición entre temas más sofisticada:**
+
    ```css
    @supports (view-transition-name: none) {
      /* View Transitions API */

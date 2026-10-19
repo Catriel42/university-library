@@ -94,6 +94,7 @@ AppLayout                     router.tsx (raíz)                                
 ## Resumen por Categoría
 
 ### 🔴 BASE UI (7 componentes)
+
 - **Button** ⭐⭐⭐⭐⭐ (11 usos) - MÁS CRÍTICO
 - **Card** ⭐⭐ (2 usos)
 - **Skeleton** ⭐⭐ (2 usos)
@@ -103,6 +104,7 @@ AppLayout                     router.tsx (raíz)                                
 - **BookCoverImage** ⭐⭐⭐⭐ (4 usos) - CUSTOM
 
 ### 🟠 CATÁLOGO (8 componentes)
+
 ```
 CatalogPage (104 líneas)
 ├── 📊 CatalogResultsGrid
@@ -123,6 +125,7 @@ CatalogPage (104 líneas)
 ```
 
 ### 🟡 DETALLES DEL LIBRO (5 componentes)
+
 ```
 BookDetailPage (119 líneas)
 ├── BookHero (imagen)
@@ -139,6 +142,7 @@ BookDetailPage (119 líneas)
 ```
 
 ### 🟢 PRÉSTAMOS (4 componentes)
+
 ```
 MyLoansPage (94 líneas)
 ├── LoanCard (préstamo activo)
@@ -155,6 +159,7 @@ MyLoansPage (94 líneas)
 ```
 
 ### 🔵 AUTENTICACIÓN (2 componentes)
+
 ```
 AuthPage (291 líneas)
 ├── AuthHeader (titulo/desc)
@@ -165,6 +170,7 @@ AuthPage (291 líneas)
 ```
 
 ### ⚫ COMPARTIDOS (2 componentes)
+
 ```
 CopyPips (pips de disponibilidad)
 ├── Usado por BookCard
@@ -181,17 +187,17 @@ ProtectedRoute (verificación de auth)
 
 Si modificas este componente, afecta a:
 
-| Componente | Cambios → Afectan a | # Archivos |
-|---|---|---|
-| **Button** | 11 componentes, 5 páginas | 11 |
-| **BookCoverImage** | 4 componentes | 4 |
-| **CopyPips** | 3 componentes | 3 |
-| **AlertMessage** | 3 componentes | 3 |
-| **Card** | 2 componentes | 2 |
-| **Skeleton** | 2 componentes | 2 |
-| **BookCard** | 1 componente (grid) | 1 |
-| **LoanCard** | 1 página | 1 |
-| **CatalogResultsGrid** | 1 página (CatalogPage) | 1 |
+| Componente             | Cambios → Afectan a       | # Archivos |
+| ---------------------- | ------------------------- | ---------- |
+| **Button**             | 11 componentes, 5 páginas | 11         |
+| **BookCoverImage**     | 4 componentes             | 4          |
+| **CopyPips**           | 3 componentes             | 3          |
+| **AlertMessage**       | 3 componentes             | 3          |
+| **Card**               | 2 componentes             | 2          |
+| **Skeleton**           | 2 componentes             | 2          |
+| **BookCard**           | 1 componente (grid)       | 1          |
+| **LoanCard**           | 1 página                  | 1          |
+| **CatalogResultsGrid** | 1 página (CatalogPage)    | 1          |
 
 ---
 
@@ -238,15 +244,17 @@ Este es un buen nivel de acoplamiento: cada página gestiona su propio dominio.
 ### Podrían beneficiarse de un componente wrapper:
 
 1. **BookCardBase**
+
    ```
    Actualmente: BookCard (se usa en CatalogResultsGrid)
    Futuro: LoanCard también podría heredar
-   
+
    BookCardBase → BookCard (para catálogo)
                → LoanCard (simplificar lógica)
    ```
 
 2. **BookDisplay**
+
    ```
    Actualmente: BookHero + BookMeta + BookMeta (separados)
    Futuro: Un componente que combine los 3
@@ -270,4 +278,3 @@ Tu estructura de componentes es **profesional y bien organizada**:
 ✅ **Fácil de mantener** - Cambios en un componente afectan a pocos archivos
 
 💪 **Listo para crecer**
-

@@ -18,6 +18,7 @@
 #### `button.tsx` (57 líneas) — **95% shadcn, 5% personalización**
 
 **Lo que shadcn proporcionó:**
+
 ```tsx
 // Estructura + CVA
 const buttonVariants = cva(...) // ← Estructura standard de shadcn
@@ -36,6 +37,7 @@ export { Button, buttonVariants }
 ```
 
 **Lo que personalizaste:**
+
 - Clases Tailwind específicas para tu tema (colores `primary`, `destructive`, etc.)
 - Variantes custom (6 variants: default, outline, secondary, ghost, destructive, link)
 - Sizes custom (6 sizes: default, xs, sm, lg, icon, icon-xs, icon-sm, icon-lg)
@@ -47,6 +49,7 @@ export { Button, buttonVariants }
 #### `input.tsx` (19 líneas) — **90% shadcn, 10% personalización**
 
 **Lo que shadcn proporcionó:**
+
 ```tsx
 import { Input as InputPrimitive } from '@base-ui/react/input'
 
@@ -56,6 +59,7 @@ function Input({ className, type, ...props }) {
 ```
 
 **Lo que personalizaste:**
+
 - Clases Tailwind largas (1 línea de 250+ caracteres)
 - Colores mapped a tus tokens (`--border-input`, `--muted-foreground`, etc.)
 
@@ -66,6 +70,7 @@ function Input({ className, type, ...props }) {
 #### `badge.tsx` (51 líneas) — **90% shadcn, 10% personalización**
 
 **Lo que shadcn proporcionó:**
+
 ```tsx
 import { mergeProps } from '@base-ui/react/merge-props'
 import { useRender } from '@base-ui/react/use-render'
@@ -76,6 +81,7 @@ function Badge({ className, variant, render, ...props }) {
 ```
 
 **Lo que personalizaste:**
+
 - Variantes: default, secondary, destructive, outline, ghost, link
 - Colores mapped a tus tokens
 
@@ -86,18 +92,20 @@ function Badge({ className, variant, render, ...props }) {
 #### `card.tsx` (102 líneas) — **85% shadcn, 15% personalización**
 
 **Lo que shadcn proporcionó:**
+
 ```tsx
 // Estructura de 6 sub-componentes
-Card
-CardHeader
-CardTitle
-CardDescription
-CardAction
-CardContent
-CardFooter
+Card;
+CardHeader;
+CardTitle;
+CardDescription;
+CardAction;
+CardContent;
+CardFooter;
 ```
 
 **Lo que personalizaste:**
+
 - CSS variables para spacing: `--card-spacing`
 - Container queries: `@container/card-header`
 - Tailwind tokens para colores/bordes
@@ -110,8 +118,9 @@ CardFooter
 #### `skeleton.tsx` (13 líneas) — **100% shadcn**
 
 **Lo que shadcn proporcionó:**
+
 ```tsx
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 function Skeleton({ className, ...props }) {
   return (
@@ -120,7 +129,7 @@ function Skeleton({ className, ...props }) {
       className={cn('bg-muted animate-pulse rounded-md', className)}
       {...props}
     />
-  )
+  );
 }
 ```
 
@@ -137,21 +146,25 @@ function Skeleton({ className, ...props }) {
 ```tsx
 export function AlertMessage({
   message,
-  variant = 'danger',  // ← Tus variantes: danger, info, warning
+  variant = 'danger', // ← Tus variantes: danger, info, warning
   className,
 }: AlertMessageProps) {
   return (
-    <div role="alert" className={cn(
-      'flex items-start gap-2.5 rounded-xl border p-3 font-sans text-sm',
-      variant === 'danger' && 'bg-danger/10 border-danger/30 text-danger',
-      variant === 'info' && 'bg-accent/10 border-accent/30 text-accent',
-      variant === 'warning' && 'border-amber-500/30 bg-amber-500/10 text-amber-500',
-      className
-    )}>
+    <div
+      role="alert"
+      className={cn(
+        'flex items-start gap-2.5 rounded-xl border p-3 font-sans text-sm',
+        variant === 'danger' && 'bg-danger/10 border-danger/30 text-danger',
+        variant === 'info' && 'bg-accent/10 border-accent/30 text-accent',
+        variant === 'warning' &&
+          'border-amber-500/30 bg-amber-500/10 text-amber-500',
+        className
+      )}
+    >
       <AlertCircle size={18} className="mt-0.5 shrink-0" />
       <span className="leading-tight">{message}</span>
     </div>
-  )
+  );
 }
 ```
 
@@ -233,13 +246,13 @@ export function BookCoverImage({
 
 ## PATRONES QUE USASTE BIEN
 
-| Patrón | Dónde | Por qué funciona |
-|--------|-------|------------------|
-| **Composición** | Card → CardHeader, CardTitle, etc. | Reutilizable sin prop drilling |
-| **Variantes con CVA** | Button, Badge | Type-safe, auto-complete en IDE |
-| **cn() para merge clases** | Todos | Evita conflictos de Tailwind |
-| **data-slot** | badge, card, skeleton | Selectores semánticos para CSS |
-| **Primitivos sin styled** | Input, Button → Base UI | Accesibles, server-safe, ligeros |
+| Patrón                     | Dónde                              | Por qué funciona                 |
+| -------------------------- | ---------------------------------- | -------------------------------- |
+| **Composición**            | Card → CardHeader, CardTitle, etc. | Reutilizable sin prop drilling   |
+| **Variantes con CVA**      | Button, Badge                      | Type-safe, auto-complete en IDE  |
+| **cn() para merge clases** | Todos                              | Evita conflictos de Tailwind     |
+| **data-slot**              | badge, card, skeleton              | Selectores semánticos para CSS   |
+| **Primitivos sin styled**  | Input, Button → Base UI            | Accesibles, server-safe, ligeros |
 
 ---
 
@@ -254,6 +267,7 @@ export function BookCoverImage({
 - ✅ Sin duplicación ni conflictos = BIEN
 
 Es un buen ejemplo de:
+
 > "Usar shadcn como scaffold, no como dependencia eternal"
 
 Si en 6 meses necesitas cambiar de primitivos (Radix → Ark UI → HeadlessUI), solo cambias los imports del primer nivel. El resto de tu código sigue igual. 💪

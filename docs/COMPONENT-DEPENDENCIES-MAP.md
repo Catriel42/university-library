@@ -71,40 +71,40 @@ AppLayout (54 líneas)
 
 ## 2. Tabla de Dependencias (Quién usa a quién)
 
-| Componente | Usa | Categoría |
-|---|---|---|
-| **AuthPage** | AlertMessage, AuthHeader, AuthModeSwitcher, Button, Card | Page |
-| **CatalogPage** | CategoryFilterBar, CatalogSearchForm, CatalogToolbar, CatalogPagination, CatalogResultsGrid, CatalogEmptyState, CatalogErrorState | Page |
-| **BookDetailPage** | BookHero, BookMeta, BookAvailabilityPanel, BookActionCard, BookDescription, Button, Skeleton | Page |
-| **MyLoansPage** | AlertMessage, LoanCard, LoanEmptyState, LoanHistoryTable, Skeleton | Page |
-| **AppLayout** | Button | Layout |
-| **CatalogResultsGrid** | BookCard, Skeleton | Catalog Container |
-| **BookCard** | BookCoverImage, CopyPips, Button, Card | Catalog Item |
-| **LoanCard** | BookCoverImage, Button, Card, LoanOverdueBadge | Loan Item |
-| **BookActionCard** | Button, AlertMessage | Book Detail Sub |
-| **BookAvailabilityPanel** | CopyPips | Book Detail Sub |
-| **BookHero** | BookCoverImage | Book Detail Sub |
-| **LoanHistoryTable** | BookCoverImage | Loan Sub |
-| **CatalogSearchForm** | Button | Catalog Sub |
-| **CatalogToolbar** | Button | Catalog Sub |
-| **CatalogPagination** | Button | Catalog Sub |
-| **CatalogErrorState** | Button | Catalog Sub |
-| **LoanEmptyState** | Button | Loan Sub |
-| **AuthHeader** | — | Auth Sub |
-| **AuthModeSwitcher** | — | Auth Sub |
-| **BookMeta** | — | Book Detail Sub |
-| **BookDescription** | — | Book Detail Sub |
-| **CopyPips** | — | Shared |
-| **LoanOverdueBadge** | — | Loan Sub |
-| **CategoryFilterBar** | — | Catalog Sub |
-| **ProtectedRoute** | — | Route Guard |
-| **Button (UI)** | @base-ui/react | Base Primitive |
-| **Card (UI)** | — | Base Primitive |
-| **Input (UI)** | @base-ui/react | Base Primitive |
-| **Badge (UI)** | @base-ui/react | Base Primitive |
-| **Skeleton (UI)** | — | Base Primitive |
-| **AlertMessage (UI)** | — | Custom UI |
-| **BookCoverImage (UI)** | — | Custom UI |
+| Componente                | Usa                                                                                                                               | Categoría         |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
+| **AuthPage**              | AlertMessage, AuthHeader, AuthModeSwitcher, Button, Card                                                                          | Page              |
+| **CatalogPage**           | CategoryFilterBar, CatalogSearchForm, CatalogToolbar, CatalogPagination, CatalogResultsGrid, CatalogEmptyState, CatalogErrorState | Page              |
+| **BookDetailPage**        | BookHero, BookMeta, BookAvailabilityPanel, BookActionCard, BookDescription, Button, Skeleton                                      | Page              |
+| **MyLoansPage**           | AlertMessage, LoanCard, LoanEmptyState, LoanHistoryTable, Skeleton                                                                | Page              |
+| **AppLayout**             | Button                                                                                                                            | Layout            |
+| **CatalogResultsGrid**    | BookCard, Skeleton                                                                                                                | Catalog Container |
+| **BookCard**              | BookCoverImage, CopyPips, Button, Card                                                                                            | Catalog Item      |
+| **LoanCard**              | BookCoverImage, Button, Card, LoanOverdueBadge                                                                                    | Loan Item         |
+| **BookActionCard**        | Button, AlertMessage                                                                                                              | Book Detail Sub   |
+| **BookAvailabilityPanel** | CopyPips                                                                                                                          | Book Detail Sub   |
+| **BookHero**              | BookCoverImage                                                                                                                    | Book Detail Sub   |
+| **LoanHistoryTable**      | BookCoverImage                                                                                                                    | Loan Sub          |
+| **CatalogSearchForm**     | Button                                                                                                                            | Catalog Sub       |
+| **CatalogToolbar**        | Button                                                                                                                            | Catalog Sub       |
+| **CatalogPagination**     | Button                                                                                                                            | Catalog Sub       |
+| **CatalogErrorState**     | Button                                                                                                                            | Catalog Sub       |
+| **LoanEmptyState**        | Button                                                                                                                            | Loan Sub          |
+| **AuthHeader**            | —                                                                                                                                 | Auth Sub          |
+| **AuthModeSwitcher**      | —                                                                                                                                 | Auth Sub          |
+| **BookMeta**              | —                                                                                                                                 | Book Detail Sub   |
+| **BookDescription**       | —                                                                                                                                 | Book Detail Sub   |
+| **CopyPips**              | —                                                                                                                                 | Shared            |
+| **LoanOverdueBadge**      | —                                                                                                                                 | Loan Sub          |
+| **CategoryFilterBar**     | —                                                                                                                                 | Catalog Sub       |
+| **ProtectedRoute**        | —                                                                                                                                 | Route Guard       |
+| **Button (UI)**           | @base-ui/react                                                                                                                    | Base Primitive    |
+| **Card (UI)**             | —                                                                                                                                 | Base Primitive    |
+| **Input (UI)**            | @base-ui/react                                                                                                                    | Base Primitive    |
+| **Badge (UI)**            | @base-ui/react                                                                                                                    | Base Primitive    |
+| **Skeleton (UI)**         | —                                                                                                                                 | Base Primitive    |
+| **AlertMessage (UI)**     | —                                                                                                                                 | Custom UI         |
+| **BookCoverImage (UI)**   | —                                                                                                                                 | Custom UI         |
 
 ---
 
@@ -112,7 +112,7 @@ AppLayout (54 líneas)
 
 ```
 ⭐⭐⭐⭐⭐ Button        → usado por 11 componentes
-⭐⭐⭐⭐  Card          → usado por 2 componentes  
+⭐⭐⭐⭐  Card          → usado por 2 componentes
 ⭐⭐⭐⭐  BookCoverImage → usado por 4 componentes
 ⭐⭐⭐   CopyPips       → usado por 3 componentes
 ⭐⭐⭐   AlertMessage   → usado por 3 componentes
@@ -187,6 +187,7 @@ AppLayout (54 líneas)
 ## 5. Niveles de Profundidad
 
 ### Nivel 0: Páginas (Entry Points)
+
 - AuthPage
 - CatalogPage
 - BookDetailPage
@@ -194,12 +195,14 @@ AppLayout (54 líneas)
 - AppLayout
 
 ### Nivel 1: Contenedores/Secciones
+
 - CatalogResultsGrid
 - LoanCard
 - BookActionCard
 - BookAvailabilityPanel
 
 ### Nivel 2: Presentacionales
+
 - BookCard
 - CatalogSearchForm
 - CatalogToolbar
@@ -218,6 +221,7 @@ AppLayout (54 líneas)
 - CategoryFilterBar
 
 ### Nivel 3: Base UI (Primitivos)
+
 - Button
 - Card
 - Input
@@ -231,6 +235,7 @@ AppLayout (54 líneas)
 ## 6. Componentes por Funcionalidad
 
 ### 🔐 Autenticación
+
 ```
 AuthPage
 ├── AuthHeader (mostrar título/desc)
@@ -241,6 +246,7 @@ AuthPage
 ```
 
 ### 🔍 Búsqueda de Catálogo
+
 ```
 CatalogPage
 ├── CategoryFilterBar (filtro por tema)
@@ -259,6 +265,7 @@ CatalogPage
 ```
 
 ### 📖 Detalles del Libro
+
 ```
 BookDetailPage
 ├── BookHero (cubierta)
@@ -273,6 +280,7 @@ BookDetailPage
 ```
 
 ### 📚 Mis Préstamos
+
 ```
 MyLoansPage
 ├── Tabs: Active / History
@@ -294,18 +302,18 @@ MyLoansPage
 
 ## 7. Estadísticas
 
-| Métrica | Valor |
-|---------|-------|
-| **Total de Componentes** | 37 |
-| **Páginas** | 4 |
-| **Layouts** | 1 |
-| **Componentes de Negocio** | 22 |
-| **Componentes UI (Base)** | 7 |
-| **Componentes UI (Custom)** | 2 |
-| **Componentes Utilitarios** | 1 |
-| **Profundidad máxima** | 4 niveles |
-| **Componente más reutilizado** | Button (11 usos) |
-| **Componentes sin dependencias** | 11 |
+| Métrica                          | Valor            |
+| -------------------------------- | ---------------- |
+| **Total de Componentes**         | 37               |
+| **Páginas**                      | 4                |
+| **Layouts**                      | 1                |
+| **Componentes de Negocio**       | 22               |
+| **Componentes UI (Base)**        | 7                |
+| **Componentes UI (Custom)**      | 2                |
+| **Componentes Utilitarios**      | 1                |
+| **Profundidad máxima**           | 4 niveles        |
+| **Componente más reutilizado**   | Button (11 usos) |
+| **Componentes sin dependencias** | 11               |
 
 ---
 
@@ -318,16 +326,16 @@ AuthPage:
   AuthHeader ↔ AuthModeSwitcher ↔ Button ↔ Card ↔ AlertMessage
 
 CatalogPage:
-  CategoryFilterBar ↔ CatalogSearchForm ↔ CatalogToolbar 
+  CategoryFilterBar ↔ CatalogSearchForm ↔ CatalogToolbar
   ↔ CatalogResultsGrid ↔ BookCard ↔ CopyPips ↔ Button
   ↔ CatalogPagination ↔ Skeleton
 
 BookDetailPage:
-  BookHero ↔ BookMeta ↔ BookAvailabilityPanel ↔ BookActionCard 
+  BookHero ↔ BookMeta ↔ BookAvailabilityPanel ↔ BookActionCard
   ↔ BookDescription ↔ BookCoverImage ↔ CopyPips ↔ Button ↔ Skeleton
 
 MyLoansPage:
-  LoanCard ↔ LoanEmptyState ↔ LoanHistoryTable ↔ BookCoverImage 
+  LoanCard ↔ LoanEmptyState ↔ LoanHistoryTable ↔ BookCoverImage
   ↔ Button ↔ Card ↔ AlertMessage ↔ Skeleton
 ```
 
@@ -336,14 +344,16 @@ MyLoansPage:
 ## 9. Recomendaciones
 
 ### ✅ Bien estructurado
+
 - Separación clara entre niveles (Pages → Containers → Presentational → UI)
 - Reutilización inteligente (Button, BookCoverImage, CopyPips)
 - Sin ciclos/circular dependencies
 
 ### 🔍 Puntos a observar
+
 - **Button**: Usado 11 veces. Si cambias su API, afecta 11 archivos.
   - Solución: Mantener compatible hacia atrás.
-  
+
 - **BookCoverImage**: Usado 4 veces (BookCard, BookHero, LoanCard, LoanHistoryTable).
   - Bien: La lógica de fallback está centralizada.
 
@@ -351,6 +361,7 @@ MyLoansPage:
   - Considera si merece un componente intermedio BookCardWrapper.
 
 ### 🚀 Mejoras futuras
+
 - Extraer `BookCardContainer` si BookCard y LoanCard comparten mucho
 - Considerar un `<BookList />` que envuelva `CatalogResultsGrid` + `LoanHistoryTable`
 - Crear `<FormField />` para DRY en AuthPage (solo si crece)
@@ -362,6 +373,7 @@ MyLoansPage:
 ### Por carpeta
 
 **`ui/`** (7 componentes - Base Primitives)
+
 ```
 button.tsx          ← usado por 11 componentes
 card.tsx            ← usado por 3 componentes
@@ -373,6 +385,7 @@ BookCoverImage.tsx  ← usado por 4 componentes
 ```
 
 **`catalog/`** (8 componentes)
+
 ```
 CatalogPage         ← entry point
   ├── BookCard      ← reutilizable
@@ -386,6 +399,7 @@ CatalogPage         ← entry point
 ```
 
 **`book-detail/`** (5 componentes)
+
 ```
 BookDetailPage      ← entry point
   ├── BookHero
@@ -396,6 +410,7 @@ BookDetailPage      ← entry point
 ```
 
 **`loans/`** (4 componentes)
+
 ```
 MyLoansPage         ← entry point
   ├── LoanCard      ← reutilizable
@@ -405,6 +420,7 @@ MyLoansPage         ← entry point
 ```
 
 **`auth/`** (2 componentes)
+
 ```
 AuthPage            ← entry point
   ├── AuthHeader
@@ -412,6 +428,7 @@ AuthPage            ← entry point
 ```
 
 **Root** (2 componentes)
+
 ```
 CopyPips            ← compartido, usado por 3
 ProtectedRoute      ← route guard
@@ -420,6 +437,7 @@ ProtectedRoute      ← route guard
 ---
 
 Este mapa te ayuda a:
+
 - Entender el flujo de la aplicación
 - Ver qué cambia si modificas un componente
 - Identificar componentes candidates a refactor
