@@ -28,19 +28,19 @@ export function CatalogSearchForm({
     fieldParam === 'title'
       ? 'Search by book title...'
       : fieldParam === 'author'
-      ? 'Search by author name...'
-      : 'Search by title, author, or keyword...';
+        ? 'Search by author name...'
+        : 'Search by title, author, or keyword...';
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-3">
-      <div className="flex flex-col sm:flex-row gap-2 w-full">
-        <div className="flex bg-surface-2 p-1 rounded-xl border border-border sm:w-auto shrink-0 self-center">
+      <div className="flex w-full flex-col gap-2 sm:flex-row">
+        <div className="bg-surface-2 border-border flex shrink-0 self-center rounded-xl border p-1 sm:w-auto">
           {SEARCH_FIELDS.map((field) => (
             <button
               key={field.id}
               type="button"
               onClick={() => onFieldChange(field.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-mono uppercase tracking-wider transition-colors ${
+              className={`rounded-lg px-3 py-1.5 font-mono text-xs tracking-wider uppercase transition-colors ${
                 fieldParam === field.id
                   ? 'bg-surface text-accent font-semibold shadow-sm'
                   : 'text-muted hover:text-text'
@@ -51,23 +51,26 @@ export function CatalogSearchForm({
           ))}
         </div>
 
-        <div className="relative flex-1 group">
-          <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-            <Search className="text-muted group-focus-within:text-accent transition-colors" size={18} />
+        <div className="group relative flex-1">
+          <div className="pointer-events-none absolute inset-y-0 left-4 flex items-center">
+            <Search
+              className="text-muted group-focus-within:text-accent transition-colors"
+              size={18}
+            />
           </div>
           <input
             type="text"
             value={inputQuery}
             onChange={(e) => onQueryChange(e.target.value)}
             placeholder={currentPlaceholder}
-            className="w-full bg-surface border border-border rounded-xl py-3.5 pl-11 pr-20 text-text placeholder:text-muted focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all text-base shadow-sm"
+            className="bg-surface border-border text-text placeholder:text-muted focus:border-accent/50 focus:ring-accent/50 w-full rounded-xl border py-3.5 pr-20 pl-11 text-base shadow-sm transition-all focus:ring-1 focus:outline-none"
           />
           {inputQuery && (
             <button
               type="button"
               onClick={onClearQuery}
               aria-label="Clear search input"
-              className="absolute inset-y-0 right-12 flex items-center pr-2 text-muted hover:text-text transition-colors"
+              className="text-muted hover:text-text absolute inset-y-0 right-12 flex items-center pr-2 transition-colors"
             >
               <X size={16} />
             </button>
@@ -75,7 +78,7 @@ export function CatalogSearchForm({
           <Button
             type="submit"
             size="sm"
-            className="absolute inset-y-1.5 right-1.5 rounded-lg px-4 bg-accent text-bg hover:bg-accent/80 transition-colors"
+            className="bg-accent text-bg hover:bg-accent/80 absolute inset-y-1.5 right-1.5 rounded-lg px-4 transition-colors"
           >
             Search
           </Button>

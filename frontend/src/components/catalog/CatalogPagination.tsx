@@ -17,9 +17,10 @@ export function CatalogPagination({
   if (totalPages <= 1) return null;
 
   return (
-    <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-border pt-6 pb-12">
-      <span className="text-xs font-mono text-muted">
-        Page {currentPage} of {totalPages.toLocaleString()} ({totalFound.toLocaleString()} total items)
+    <div className="border-border mt-12 flex flex-col items-center justify-between gap-4 border-t pt-6 pb-12 sm:flex-row">
+      <span className="text-muted font-mono text-xs">
+        Page {currentPage} of {totalPages.toLocaleString()} (
+        {totalFound.toLocaleString()} total items)
       </span>
 
       <div className="flex items-center gap-2">
@@ -28,10 +29,10 @@ export function CatalogPagination({
           size="sm"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage <= 1}
-          className="h-9 px-3 border-border hover:border-accent text-text disabled:opacity-40"
+          className="border-border hover:border-accent text-text h-9 px-3 disabled:opacity-40"
         >
           <ChevronLeft size={16} />
-          <span className="hidden sm:inline ml-1">Previous</span>
+          <span className="ml-1 hidden sm:inline">Previous</span>
         </Button>
 
         <div className="flex items-center gap-1">
@@ -52,10 +53,10 @@ export function CatalogPagination({
                 key={pageNum}
                 type="button"
                 onClick={() => onPageChange(pageNum)}
-                className={`w-9 h-9 rounded-lg text-xs font-mono transition-colors ${
+                className={`h-9 w-9 rounded-lg font-mono text-xs transition-colors ${
                   currentPage === pageNum
                     ? 'bg-accent text-bg font-bold shadow-sm'
-                    : 'bg-surface border border-border text-muted hover:text-text hover:border-border/80'
+                    : 'bg-surface border-border text-muted hover:text-text hover:border-border/80 border'
                 }`}
               >
                 {pageNum}
@@ -69,9 +70,9 @@ export function CatalogPagination({
           size="sm"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage >= totalPages}
-          className="h-9 px-3 border-border hover:border-accent text-text disabled:opacity-40"
+          className="border-border hover:border-accent text-text h-9 px-3 disabled:opacity-40"
         >
-          <span className="hidden sm:inline mr-1">Next</span>
+          <span className="mr-1 hidden sm:inline">Next</span>
           <ChevronRight size={16} />
         </Button>
       </div>

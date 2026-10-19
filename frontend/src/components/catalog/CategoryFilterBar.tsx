@@ -19,11 +19,14 @@ interface CategoryFilterBarProps {
   onSelectCategory: (id: string) => void;
 }
 
-export function CategoryFilterBar({ selectedSubject, onSelectCategory }: CategoryFilterBarProps) {
+export function CategoryFilterBar({
+  selectedSubject,
+  onSelectCategory,
+}: CategoryFilterBarProps) {
   return (
-    <div className="w-full mt-6 overflow-x-auto pb-2 scrollbar-none">
-      <div className="flex items-center gap-2 justify-start md:justify-center min-w-max px-2">
-        <span className="text-xs font-mono uppercase tracking-wider text-muted flex items-center gap-1 mr-1">
+    <div className="mt-6 w-full scrollbar-none overflow-x-auto pb-2">
+      <div className="flex min-w-max items-center justify-start gap-2 px-2 md:justify-center">
+        <span className="text-muted mr-1 flex items-center gap-1 font-mono text-xs tracking-wider uppercase">
           <Filter size={13} />
           <span>Subjects:</span>
         </span>
@@ -32,7 +35,7 @@ export function CategoryFilterBar({ selectedSubject, onSelectCategory }: Categor
             key={cat.id}
             type="button"
             onClick={() => onSelectCategory(cat.id)}
-            className={`px-3 py-1.5 rounded-full text-xs font-sans whitespace-nowrap transition-all border ${
+            className={`rounded-full border px-3 py-1.5 font-sans text-xs whitespace-nowrap transition-all ${
               selectedSubject === cat.id
                 ? 'bg-accent/15 border-accent text-accent font-medium shadow-sm'
                 : 'bg-surface-2/60 border-border text-muted hover:text-text hover:border-border/80'

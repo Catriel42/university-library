@@ -36,27 +36,28 @@ export function CatalogToolbar({
   const resultTitle = queryParam
     ? `Results for "${queryParam}"`
     : subjectParam
-    ? `Subject: ${subjectParam}`
-    : 'Catalog';
+      ? `Subject: ${subjectParam}`
+      : 'Catalog';
 
   const countDisplay = hideUnavailable
     ? `${displayedCount} available on page`
     : `${numFound.toLocaleString()} found`;
 
   return (
-    <div className="mb-6 flex flex-col md:flex-row gap-4 md:items-center justify-between border-b border-border pb-4">
+    <div className="border-border mb-6 flex flex-col justify-between gap-4 border-b pb-4 md:flex-row md:items-center">
       <div>
         <div className="flex items-baseline gap-2">
-          <h2 className="text-2xl font-serif text-text">{resultTitle}</h2>
-          <span className="text-mono text-sm text-muted">{countDisplay}</span>
+          <h2 className="text-text font-serif text-2xl">{resultTitle}</h2>
+          <span className="text-mono text-muted text-sm">{countDisplay}</span>
         </div>
         {authorSortScope === 'page' && sortParam === 'author' && (
-          <p className="text-xs text-warn font-sans mt-1">
-            * Matches exceed 100 items; results are alphabetically sorted within this page.
+          <p className="text-warn mt-1 font-sans text-xs">
+            * Matches exceed 100 items; results are alphabetically sorted within
+            this page.
           </p>
         )}
         {authorSortScope === 'exact' && sortParam === 'author' && (
-          <p className="text-xs text-accent font-sans mt-1">
+          <p className="text-accent mt-1 font-sans text-xs">
             * Exact alphabetical sort by author across all matches.
           </p>
         )}
@@ -66,15 +67,17 @@ export function CatalogToolbar({
         <button
           type="button"
           onClick={onToggleHideUnavailable}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-sans transition-colors ${
+          className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 font-sans text-xs transition-colors ${
             hideUnavailable
               ? 'bg-accent/10 border-accent/40 text-accent font-medium'
               : 'bg-surface border-border text-muted hover:text-text'
           }`}
         >
           <span
-            className={`w-3.5 h-3.5 rounded border flex items-center justify-center ${
-              hideUnavailable ? 'bg-accent border-accent text-bg' : 'border-border'
+            className={`flex h-3.5 w-3.5 items-center justify-center rounded border ${
+              hideUnavailable
+                ? 'bg-accent border-accent text-bg'
+                : 'border-border'
             }`}
           >
             {hideUnavailable && <Check size={10} strokeWidth={3} />}
@@ -83,14 +86,17 @@ export function CatalogToolbar({
         </button>
 
         <div className="flex items-center gap-2">
-          <label htmlFor="catalog-sort" className="text-xs font-mono text-muted uppercase">
+          <label
+            htmlFor="catalog-sort"
+            className="text-muted font-mono text-xs uppercase"
+          >
             Sort:
           </label>
           <select
             id="catalog-sort"
             value={sortParam}
             onChange={(e) => onSortChange(e.target.value)}
-            className="bg-surface border border-border rounded-lg px-2.5 py-1.5 text-xs text-text focus:outline-none focus:border-accent font-sans"
+            className="bg-surface border-border text-text focus:border-accent rounded-lg border px-2.5 py-1.5 font-sans text-xs focus:outline-none"
           >
             {SORT_OPTIONS.map((opt) => (
               <option key={opt.id} value={opt.id}>

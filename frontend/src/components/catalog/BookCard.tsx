@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Calendar } from 'lucide-react';
 import type { WorkDTO } from '@university-library/shared';
+import { BookCoverImage } from '@/components/ui/BookCoverImage';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CopyPips } from '@/components/CopyPips';
@@ -19,54 +20,48 @@ export function BookCard({ book }: BookCardProps) {
   return (
     <Card
       onClick={handleNavigate}
-      className="bg-surface border-border overflow-hidden rounded-2xl hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(45,212,168,0.1)] hover:border-accent/30 transition-all duration-300 h-full flex flex-col cursor-pointer"
+      className="bg-surface border-border hover:border-accent/30 flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(45,212,168,0.1)]"
     >
-      <div className="w-full aspect-2/3 relative bg-surface-2 border-b border-border overflow-hidden shrink-0">
-        {book.coverId ? (
-          <img
-            src={`https://covers.openlibrary.org/b/id/${book.coverId}-L.jpg`}
-            alt={`Cover of ${book.title}`}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-            loading="lazy"
-          />
-        ) : (
-          <div className="w-full h-full bg-gradient-to-br from-surface to-border flex items-center justify-center p-6 text-center">
-            <span className="font-serif text-muted/60 text-lg line-clamp-4 leading-snug">
-              {book.title}
-            </span>
-          </div>
-        )}
+      <div className="border-border relative aspect-2/3 w-full shrink-0 overflow-hidden border-b">
+        <BookCoverImage
+          coverId={book.coverId}
+          title={book.title}
+          size="full"
+          imageClassName="transition-transform duration-500 group-hover:scale-[1.03]"
+        />
 
         {book.availableCopies === 0 && (
-          <div className="absolute top-2 right-2 bg-surface-2/90 backdrop-blur border border-border px-2 py-1 rounded-md">
-            <span className="text-[10px] uppercase tracking-wider font-mono text-warn">Waitlist</span>
+          <div className="bg-surface-2/90 border-border absolute top-2 right-2 rounded-md border px-2 py-1 backdrop-blur">
+            <span className="text-warn font-mono text-[10px] tracking-wider uppercase">
+              Waitlist
+            </span>
           </div>
         )}
       </div>
 
-      <div className="p-4 flex flex-col flex-1">
-        <h3 className="font-serif text-text text-base leading-tight line-clamp-2 mb-1 group-hover:text-accent transition-colors">
+      <div className="flex flex-1 flex-col p-4">
+        <h3 className="text-text group-hover:text-accent mb-1 line-clamp-2 font-serif text-base leading-tight transition-colors">
           {book.title}
         </h3>
-        <p className="text-sm font-sans text-muted line-clamp-1 mb-2">
+        <p className="text-muted mb-2 line-clamp-1 font-sans text-sm">
           {book.firstAuthor || 'Unknown Author'}
         </p>
 
         {book.firstPublishYear && (
-          <div className="flex items-center gap-1 text-[11px] text-muted font-mono mb-3">
+          <div className="text-muted mb-3 flex items-center gap-1 font-mono text-[11px]">
             <Calendar size={12} className="opacity-70" />
             <span>{book.firstPublishYear}</span>
           </div>
         )}
 
-        <div className="mt-auto pt-2 flex items-center justify-between">
+        <div className="mt-auto flex items-center justify-between pt-2">
           <CopyPips total={book.totalCopies} available={book.availableCopies} />
 
           {book.availableCopies > 0 ? (
             <Button
               size="sm"
               variant="ghost"
-              className="h-7 text-xs text-accent hover:bg-accent/10 px-2 ml-auto"
+              className="text-accent hover:bg-accent/10 ml-auto h-7 px-2 text-xs"
               onClick={(e) => {
                 e.stopPropagation();
                 handleNavigate();
@@ -78,7 +73,7 @@ export function BookCard({ book }: BookCardProps) {
             <Button
               size="sm"
               variant="ghost"
-              className="h-7 text-xs text-muted hover:bg-surface-2 px-2 ml-auto"
+              className="text-muted hover:bg-surface-2 ml-auto h-7 px-2 text-xs"
               onClick={(e) => {
                 e.stopPropagation();
                 handleNavigate();
