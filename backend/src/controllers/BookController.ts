@@ -13,11 +13,18 @@ const searchQuerySchema = z
     page: z.coerce.number().int().min(1).max(1000).optional(),
     limit: z.coerce.number().int().min(1).max(100).optional(),
   })
-  .refine((query) => Boolean(query.q ?? query.title ?? query.author ?? query.subject), {
-    message: 'At least one of q, title, author or subject is required',
-  });
+  .refine(
+    (query) => Boolean(query.q ?? query.title ?? query.author ?? query.subject),
+    {
+      message: 'At least one of q, title, author or subject is required',
+    }
+  );
 
-async function search(req: Request, res: Response, next: NextFunction): Promise<void> {
+async function search(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   const parsed = searchQuerySchema.safeParse(req.query);
 
   if (!parsed.success) {
@@ -41,20 +48,20 @@ async function search(req: Request, res: Response, next: NextFunction): Promise<
 
   try {
     const result = await BookService.searchBooks(params);
-    
+
     const response = {
       numFound: result.numFound,
       start: result.start,
       authorSortScope: result.authorSortScope,
-      docs: result.docs.map(doc => ({
+      docs: result.docs.map((doc) => ({
         id: doc.cleanKey,
         title: doc.title,
         firstAuthor: doc.author_name?.[0],
         coverId: doc.cover_i,
         firstPublishYear: doc.first_publish_year,
         totalCopies: doc.totalCopies,
-        availableCopies: doc.availableCopies
-      }))
+        availableCopies: doc.availableCopies,
+      })),
     };
 
     res.json(response);
@@ -63,4 +70,29 @@ async function search(req: Request, res: Response, next: NextFunction): Promise<
   }
 }
 
-export const BookController = { search };
+async function getDetails(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  const { workKey } = req.params;
+
+  if (!workKey || typeof workKey !== 'string') {
+    res.status(400).json({
+      error: {
+        code: 'INVALID_WORK_KEY',
+        message: 'A valid workKey is required',
+      },
+    });
+    return;
+  }
+
+  try {
+    const details = await BookService.getBookDetails(workKey);
+    res.json(details);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export const BookController = { search, getDetails };

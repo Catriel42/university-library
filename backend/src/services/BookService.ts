@@ -1,3 +1,4 @@
+import type { BookDetailDTO } from '@university-library/shared';
 import { prisma } from '../lib/prisma.js';
 import { OpenLibraryService } from './OpenLibraryService.js';
 import type { OpenLibrarySearchResponse } from './OpenLibraryService.js';
@@ -29,7 +30,9 @@ const toCleanKey = (key: string): string => key.replace(WORK_KEY_PREFIX, '');
  * Availability for a list of works (ADR-0002: batched on-read query).
  * The three queries are independent, so they run in parallel.
  */
-async function getAvailabilityForWorks(workKeys: string[]): Promise<Record<string, Availability>> {
+async function getAvailabilityForWorks(
+  workKeys: string[]
+): Promise<Record<string, Availability>> {
   if (workKeys.length === 0) return {};
 
   const [localWorks, activeLoans, activeHolds] = await Promise.all([
@@ -53,9 +56,15 @@ async function getAvailabilityForWorks(workKeys: string[]): Promise<Record<strin
     }),
   ]);
 
-  const totalCopies = new Map<string, number>(localWorks.map((w) => [w.id, w.copies]));
-  const loans = new Map<string, number>(activeLoans.map((l) => [l.workId, l._count._all]));
-  const holds = new Map<string, number>(activeHolds.map((h) => [h.workId, h._count._all]));
+  const totalCopies = new Map<string, number>(
+    localWorks.map((w) => [w.id, w.copies])
+  );
+  const loans = new Map<string, number>(
+    activeLoans.map((l) => [l.workId, l._count._all])
+  );
+  const holds = new Map<string, number>(
+    activeHolds.map((h) => [h.workId, h._count._all])
+  );
 
   const result: Record<string, Availability> = {};
   for (const key of workKeys) {
@@ -63,7 +72,9 @@ async function getAvailabilityForWorks(workKeys: string[]): Promise<Record<strin
     const used = (loans.get(key) ?? 0) + (holds.get(key) ?? 0);
 
     if (used > total) {
-      console.warn(`Availability inconsistency for ${key}: ${used} in use, ${total} copies`);
+      console.warn(
+        `Availability inconsistency for ${key}: ${used} in use, ${total} copies`
+      );
     }
 
     result[key] = { total, available: Math.max(0, total - used) };
@@ -180,7 +191,9 @@ async function searchBooks(query: BookSearchParams): Promise<BookSearchResult> {
     olData = await OpenLibraryService.searchBooks(params);
   }
 
-  const availability = await getAvailabilityForWorks(olData.docs.map((doc) => toCleanKey(doc.key)));
+  const availability = await getAvailabilityForWorks(
+    olData.docs.map((doc) => toCleanKey(doc.key))
+  );
 
   const docs: EnrichedDoc[] = olData.docs.map((doc) => {
     const cleanKey = toCleanKey(doc.key);
@@ -194,4 +207,70 @@ async function searchBooks(query: BookSearchParams): Promise<BookSearchResult> {
   return { ...olData, docs, authorSortScope };
 }
 
-export const BookService = { getAvailabilityForWorks, searchBooks };
+async function getBookDetails(workKey: string): Promise<BookDetailDTO> {
+  const cleanKey = toCleanKey(workKey);
+  const olWork = await OpenLibraryService.getWorkDetails(cleanKey);
+
+  const [localWork, activeLoansCount, activeHoldsCount, queueLength] =
+    await Promise.all([
+      prisma.work.findUnique({
+        where: { id: cleanKey },
+      }),
+      prisma.loan.count({
+        where: { workId: cleanKey, status: 'ACTIVE' },
+      }),
+      prisma.reservation.count({
+        where: {
+          workId: cleanKey,
+          status: 'HOLD',
+          holdExpiresAt: { gt: new Date() },
+        },
+      }),
+      prisma.reservation.count({
+        where: { workId: cleanKey, status: 'PENDING' },
+      }),
+    ]);
+
+  const totalCopies = localWork?.copies ?? DEFAULT_COPIES;
+  const availableCopies = Math.max(
+    0,
+    totalCopies - (activeLoansCount + activeHoldsCount)
+  );
+
+  let earliestReturnDate: string | null = null;
+  if (availableCopies === 0) {
+    const nextDue = await prisma.loan.findFirst({
+      where: { workId: cleanKey, status: 'ACTIVE' },
+      orderBy: { dueDate: 'asc' },
+      select: { dueDate: true },
+    });
+    if (nextDue) {
+      earliestReturnDate = nextDue.dueDate.toISOString();
+    }
+  }
+
+  const rawDescription =
+    typeof olWork.description === 'string'
+      ? olWork.description
+      : olWork.description?.value;
+
+  return {
+    id: cleanKey,
+    title: olWork.title,
+    description: rawDescription,
+    covers: olWork.covers,
+    coverId: olWork.covers?.[0],
+    subjects: olWork.subjects?.slice(0, 8),
+    firstAuthor: localWork?.firstAuthor ?? undefined,
+    totalCopies,
+    availableCopies,
+    queueLength,
+    earliestReturnDate,
+  };
+}
+
+export const BookService = {
+  getAvailabilityForWorks,
+  searchBooks,
+  getBookDetails,
+};
