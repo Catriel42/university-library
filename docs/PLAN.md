@@ -21,7 +21,7 @@ This document defines the 7-week development plan, sprint structure, and milesto
 | **Week 1**    | Planning, Requirements Analysis, and API Spike                   | Section 1, 2, 4, 5, SPIKE-01                     | Completed |
 | **Week 2**    | Architecture, Data Modeling, ADRs, and UI Design                 | CON-03, NFR-14, NFR-15, NFR-16, OPEN-02, OPEN-03 | Completed |
 | **Week 3**    | Core Catalog: Browsing, Search, Filter, Sort                     | FR-08 to FR-17, NFR-04, NFR-05                   | Completed |
-| **Week 4**    | Authentication, Book Detail, and Core Loan System                | FR-01 to FR-07, FR-18 to FR-28, BR-01 to BR-07   | Pending   |
+| **Week 4**    | Authentication, Book Detail, and Core Loan System                | FR-01 to FR-07, FR-18 to FR-28, BR-01 to BR-07   | Completed |
 | **Week 5**    | Renewals, Reservations Queue, and Reading Tracker                | FR-29 to FR-39, BR-08 to BR-14                   | Pending   |
 | **Week 6**    | Testing (Unit & Integration), QA, Performance & Accessibility    | NFR-01, NFR-02, NFR-03, NFR-07, NFR-17           | Pending   |
 | **Week 7**    | Production Deployment, Security Verification, and Final Delivery | NFR-10 to NFR-13, NFR-18, NFR-19                 | Pending   |
@@ -88,7 +88,7 @@ This document defines the 7-week development plan, sprint structure, and milesto
   - Working authentication system with protected routes.
   - Functional book detail and borrow/return lifecycle.
   - Mid-project demo milestone.
-- **Status:** Pending
+- **Status:** Completed
 
 ### Week 5: Advanced Lending Features, Reservations, and Reading Tracker
 
