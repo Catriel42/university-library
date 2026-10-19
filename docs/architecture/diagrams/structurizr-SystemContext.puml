@@ -1,0 +1,28 @@
+@startuml
+title <size:24>System Context View: University Library SPA</size>\n<size:24>C4 Level 1: System Context — how the University Library SPA fits into the wider environment.</size>
+
+set separator none
+top to bottom direction
+
+<style>
+  root {
+    BackgroundColor: #ffffff
+    FontColor: #444444
+  }
+</style>
+
+!include <C4/C4>
+!include <C4/C4_Context>
+
+Person(RegisteredUser, "Registered User", $descr="A student or faculty member. Can borrow, reserve, renew, return books, and track reading status.", $tags="", $link="")
+Person(Visitor, "Visitor", $descr="An unauthenticated person. Can browse and search the catalog but cannot borrow or reserve.", $tags="", $link="")
+System(OpenLibrary, "Open Library", $descr="Public book catalog API by the Internet Archive. Provides bibliographic metadata, cover images, and search.", $tags="", $link="")
+System(UniversityLibrarySPA, "University Library SPA", $descr="Single-Page Application that allows users to browse the catalog, borrow and reserve books, and track their reading status.", $tags="", $link="")
+
+Rel(RegisteredUser, UniversityLibrarySPA, "Browses catalog, borrows and reserves books, tracks reading status", $techn="HTTPS", $tags="", $link="")
+Rel(Visitor, UniversityLibrarySPA, "Browses and searches the catalog", $techn="HTTPS", $tags="", $link="")
+Rel(UniversityLibrarySPA, OpenLibrary, "Fetches bibliographic metadata and cover images", $techn="HTTPS / REST", $tags="", $link="")
+
+SHOW_LEGEND(true)
+hide stereotypes
+@enduml

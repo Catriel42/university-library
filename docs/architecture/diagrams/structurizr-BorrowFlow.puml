@@ -1,0 +1,37 @@
+@startuml
+title <size:24>Dynamic View: University Library SPA</size>\n<size:24>Key interaction sequence: a user borrows a book (UC-02 — happy path).</size>
+
+set separator none
+top to bottom direction
+
+<style>
+  root {
+    BackgroundColor: #ffffff
+    FontColor: #444444
+  }
+</style>
+
+!include <C4/C4>
+!include <C4/C4_Context>
+!include <C4/C4_Container>
+
+System_Boundary("UniversityLibrarySPA_boundary", "University Library SPA", $tags="") {
+  ContainerDb(UniversityLibrarySPA.PostgreSQLDatabase, "PostgreSQL Database", $techn="PostgreSQL 16", $descr="Stores users, loans, reservations, holds, reading status, and work copy counts.", $tags="", $link="")
+  Container(UniversityLibrarySPA.ReactSPA, "React SPA", $techn="React + TypeScript (Vite)", $descr="Client-side single-page application. Handles routing, state management, and all user interactions.", $tags="", $link="")
+  Container(UniversityLibrarySPA.ExpressRESTAPI, "Express REST API", $techn="Node.js + Express + TypeScript", $descr="Serves the frontend, enforces all business rules (loans, reservations, holds), proxies and caches Open Library, and manages authentication.", $tags="", $link="")
+}
+
+Person(RegisteredUser, "Registered User", $descr="A student or faculty member. Can borrow, reserve, renew, return books, and track reading status.", $tags="", $link="")
+
+Rel(RegisteredUser, UniversityLibrarySPA.ReactSPA, "1: Clicks 'Borrow' on a book", $techn="HTTPS", $tags="", $link="")
+Rel(UniversityLibrarySPA.ReactSPA, UniversityLibrarySPA.ExpressRESTAPI, "2: POST /api/loans  { workKey }", $techn="HTTPS / JSON", $tags="", $link="")
+Rel(UniversityLibrarySPA.ExpressRESTAPI, UniversityLibrarySPA.PostgreSQLDatabase, "3: BEGIN TRANSACTION — check copies, active loans, overdue", $techn="TCP / Prisma ORM", $tags="", $link="")
+Rel(UniversityLibrarySPA.PostgreSQLDatabase, UniversityLibrarySPA.ExpressRESTAPI, "4: Returns availability snapshot", $techn="TCP / Prisma ORM", $tags="", $link="")
+Rel(UniversityLibrarySPA.ExpressRESTAPI, UniversityLibrarySPA.PostgreSQLDatabase, "5: INSERT Loan, decrement available", $techn="TCP / Prisma ORM", $tags="", $link="")
+Rel(UniversityLibrarySPA.PostgreSQLDatabase, UniversityLibrarySPA.ExpressRESTAPI, "6: COMMIT — Loan created, dueDate = now + 14 days", $techn="TCP / Prisma ORM", $tags="", $link="")
+Rel(UniversityLibrarySPA.ExpressRESTAPI, UniversityLibrarySPA.ReactSPA, "7: 201 Created — { loan, dueDate }", $techn="HTTPS / JSON", $tags="", $link="")
+Rel(UniversityLibrarySPA.ReactSPA, RegisteredUser, "8: Shows confirmation with due date", $techn="HTTPS", $tags="", $link="")
+
+SHOW_LEGEND(true)
+hide stereotypes
+@enduml

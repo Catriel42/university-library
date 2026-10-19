@@ -1,0 +1,38 @@
+@startuml
+title <size:24>Container View: University Library SPA</size>\n<size:24>C4 Level 2: Container diagram — the major runnable/deployable units and their interactions.</size>
+
+set separator none
+top to bottom direction
+
+<style>
+  root {
+    BackgroundColor: #ffffff
+    FontColor: #444444
+  }
+</style>
+
+!include <C4/C4>
+!include <C4/C4_Context>
+!include <C4/C4_Container>
+
+Person(RegisteredUser, "Registered User", $descr="A student or faculty member. Can borrow, reserve, renew, return books, and track reading status.", $tags="", $link="")
+Person(Visitor, "Visitor", $descr="An unauthenticated person. Can browse and search the catalog but cannot borrow or reserve.", $tags="", $link="")
+System(OpenLibrary, "Open Library", $descr="Public book catalog API by the Internet Archive. Provides bibliographic metadata, cover images, and search.", $tags="", $link="")
+
+System_Boundary("UniversityLibrarySPA_boundary", "University Library SPA", $tags="") {
+  ContainerDb(UniversityLibrarySPA.PostgreSQLDatabase, "PostgreSQL Database", $techn="PostgreSQL 16", $descr="Stores users, loans, reservations, holds, reading status, and work copy counts.", $tags="", $link="")
+  ContainerDb(UniversityLibrarySPA.InProcessLRUCache, "In-Process LRU Cache", $techn="lru-cache (Node.js)", $descr="Server-side in-memory cache for Open Library API responses. TTL: 10 min search, 24 h work details. No external cache required.", $tags="", $link="")
+  Container(UniversityLibrarySPA.ReactSPA, "React SPA", $techn="React + TypeScript (Vite)", $descr="Client-side single-page application. Handles routing, state management, and all user interactions.", $tags="", $link="")
+  Container(UniversityLibrarySPA.ExpressRESTAPI, "Express REST API", $techn="Node.js + Express + TypeScript", $descr="Serves the frontend, enforces all business rules (loans, reservations, holds), proxies and caches Open Library, and manages authentication.", $tags="", $link="")
+}
+
+Rel(RegisteredUser, UniversityLibrarySPA.ReactSPA, "Interacts with", $techn="HTTPS", $tags="", $link="")
+Rel(Visitor, UniversityLibrarySPA.ReactSPA, "Browses catalog via", $techn="HTTPS", $tags="", $link="")
+Rel(UniversityLibrarySPA.ReactSPA, UniversityLibrarySPA.ExpressRESTAPI, "Calls REST API", $techn="HTTPS / JSON", $tags="", $link="")
+Rel(UniversityLibrarySPA.ExpressRESTAPI, UniversityLibrarySPA.PostgreSQLDatabase, "Reads and writes all library state", $techn="TCP / Prisma ORM", $tags="", $link="")
+Rel(UniversityLibrarySPA.ExpressRESTAPI, UniversityLibrarySPA.InProcessLRUCache, "Reads and writes cached OL responses", $techn="In-process", $tags="", $link="")
+Rel(UniversityLibrarySPA.InProcessLRUCache, OpenLibrary, "Fetches on cache miss", $techn="HTTPS / REST", $tags="", $link="")
+
+SHOW_LEGEND(true)
+hide stereotypes
+@enduml
