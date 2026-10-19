@@ -10,6 +10,8 @@ import cookieParser from 'cookie-parser';
 import bookRoutes from './routes/bookRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import loanRoutes from './routes/loanRoutes.js';
+import reservationRoutes from './routes/reservationRoutes.js';
+import readingStatusRoutes from './routes/readingStatusRoutes.js';
 
 export function createApp(): Express {
   const app = express();
@@ -55,6 +57,8 @@ export function createApp(): Express {
   app.use('/api/books', bookRoutes);
   app.use('/api/auth', authRoutes);
   app.use('/api/loans', loanRoutes);
+  app.use('/api/reservations', reservationRoutes);
+  app.use('/api/reading-status', readingStatusRoutes);
 
   // Central error handling middleware
   app.use(

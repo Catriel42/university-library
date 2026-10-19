@@ -7,5 +7,6 @@ const router = Router();
 router.post('/', requireAuth, LoanController.borrow);
 router.get('/me', requireAuth, LoanController.getMyLoans);
 router.post('/:id/return', requireAuth, LoanController.returnBook);
+router.post('/:id/renew', requireAuth, LoanController.renew);
 
 export default router;

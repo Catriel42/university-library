@@ -128,8 +128,53 @@ async function returnBook(
   }
 }
 
+async function renew(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  const userId = req.user?.id;
+  if (!userId) {
+    res.status(401).json({
+      error: {
+        code: ErrorCode.UNAUTHORIZED,
+        message: 'Authentication required',
+      },
+    });
+    return;
+  }
+
+  const { id } = req.params;
+  if (!id) {
+    res.status(400).json({
+      error: {
+        code: ErrorCode.BAD_REQUEST,
+        message: 'Loan id is required',
+      },
+    });
+    return;
+  }
+
+  try {
+    const loan = await LoanService.renewLoan(userId, id);
+    res.json({ loan });
+  } catch (error: unknown) {
+    if (error instanceof LoanError) {
+      res.status(error.statusCode).json({
+        error: {
+          code: error.code,
+          message: error.message,
+        },
+      });
+      return;
+    }
+    next(error);
+  }
+}
+
 export const LoanController = {
   borrow,
   getMyLoans,
   returnBook,
+  renew,
 };

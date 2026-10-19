@@ -17,6 +17,8 @@ const DEFAULT_COPIES = Number(process.env.DEFAULT_COPIES) || 3;
 const LOAN_PERIOD_DAYS = Number(process.env.LOAN_PERIOD_DAYS) || 14;
 const MAX_ACTIVE_LOANS = Number(process.env.MAX_ACTIVE_LOANS) || 5;
 const HOLD_WINDOW_HOURS = Number(process.env.HOLD_WINDOW_HOURS) || 48;
+const MAX_RENEWALS = Number(process.env.MAX_RENEWALS) || 2;
+const RENEWAL_EXTENSION_DAYS = Number(process.env.RENEWAL_EXTENSION_DAYS) || 7;
 const WORK_KEY_PREFIX = /^\/works\//;
 
 const toCleanKey = (key: string): string => key.replace(WORK_KEY_PREFIX, '');
@@ -307,8 +309,87 @@ async function returnLoan(userId: string, loanId: string): Promise<LoanDTO> {
   });
 }
 
+async function renewLoan(userId: string, loanId: string): Promise<LoanDTO> {
+  const now = new Date();
+
+  return prisma.$transaction(async (tx) => {
+    const loan = await tx.loan.findUnique({
+      where: { id: loanId },
+      include: { work: true },
+    });
+
+    if (!loan) {
+      throw new LoanError(ErrorCode.BAD_REQUEST, 'Loan not found', 404);
+    }
+
+    if (loan.userId !== userId) {
+      throw new LoanError(
+        ErrorCode.UNAUTHORIZED,
+        'You can only renew your own loans',
+        403
+      );
+    }
+
+    if (loan.status !== 'ACTIVE') {
+      throw new LoanError(
+        ErrorCode.RENEWAL_BLOCKED,
+        'Only active loans can be renewed',
+        400
+      );
+    }
+
+    if (loan.renewals >= MAX_RENEWALS) {
+      throw new LoanError(
+        ErrorCode.RENEWAL_LIMIT,
+        `This loan has already been renewed the maximum allowed (${MAX_RENEWALS}) times`,
+        422
+      );
+    }
+
+    if (now.getTime() > loan.dueDate.getTime()) {
+      throw new LoanError(
+        ErrorCode.RENEWAL_BLOCKED,
+        'Overdue loans cannot be renewed. Please return the book.',
+        422
+      );
+    }
+
+    const activeReservation = await tx.reservation.findFirst({
+      where: {
+        workId: loan.workId,
+        userId: { not: userId },
+        status: { in: ['PENDING', 'HOLD'] },
+      },
+    });
+
+    if (activeReservation) {
+      throw new LoanError(
+        ErrorCode.RENEWAL_BLOCKED,
+        'This book cannot be renewed because another reader has a pending reservation on it',
+        422
+      );
+    }
+
+    const newDueDate = new Date(
+      loan.dueDate.getTime() + RENEWAL_EXTENSION_DAYS * 24 * 60 * 60 * 1000
+    );
+
+    const updatedLoan = await tx.loan.update({
+      where: { id: loanId },
+      data: {
+        dueDate: newDueDate,
+        renewals: loan.renewals + 1,
+      },
+      include: { work: true },
+    });
+
+    return mapLoanToDTO(updatedLoan, now);
+  });
+}
+
 export const LoanService = {
   borrowBook,
   getUserLoans,
   returnLoan,
+  renewLoan,
 };
