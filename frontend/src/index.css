@@ -5,6 +5,7 @@
   --font-serif: 'Fraunces', ui-serif, Georgia, serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 
+  /* Dark mode (default) */
   --color-bg: #0e1513;
   --color-surface: #121c19;
   --color-surface-2: #16221e;
@@ -36,6 +37,21 @@
 
   --color-input: var(--color-border);
   --color-ring: var(--color-accent);
+}
+
+/* Light mode overrides */
+@theme {
+  .light {
+    --color-bg: #f8faf9;
+    --color-surface: #ffffff;
+    --color-surface-2: #f1f4f3;
+    --color-border: #d1e0db;
+    --color-text: #0e1513;
+    --color-muted: #5a7a6f;
+    --color-accent: #1ea382;
+    --color-warn: #d4a729;
+    --color-danger: #dc2626;
+  }
 }
 
 @layer base {

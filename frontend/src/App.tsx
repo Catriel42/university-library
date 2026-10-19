@@ -4,6 +4,7 @@ import Lenis from 'lenis';
 
 import { router } from '@/router';
 import { AuthProvider } from '@/context/AuthContext';
+import { ThemeProvider } from '@/context/ThemeContext';
 
 function App() {
   useEffect(() => {
@@ -25,9 +26,11 @@ function App() {
   }, []);
 
   return (
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

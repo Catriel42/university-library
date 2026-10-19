@@ -2,6 +2,7 @@ import { Outlet, Link } from 'react-router-dom';
 import { Library, User as UserIcon } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 export function AppLayout() {
   const { user, logout } = useAuth();
@@ -49,6 +50,7 @@ export function AppLayout() {
               Sign In
             </Link>
           )}
+          <ThemeToggle />
         </div>
       </nav>
 
