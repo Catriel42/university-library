@@ -20,7 +20,7 @@ Este laboratorio documenta la fase culminante del proyecto Capstone: la transici
 | **Backend API Gateway & Lambda** | [https://b9fknpj872.execute-api.us-east-1.amazonaws.com](https://b9fknpj872.execute-api.us-east-1.amazonaws.com) | API REST serverless en Node.js 20.x conectada a PostgreSQL en Amazon RDS. |
 | **Repositorio de Código Fuente** | [GitHub: Catriel42/university-library](https://github.com/Catriel42/university-library) | Repositorio completo con `README.md` profesional, código fuente y configuración de Terraform. |
 | **Repositorio Institucional** | [GitLab Jala University](https://gitlab.com/jala-university1/cohort-3/ES.CO.CSWB-366.GA.T2.26.M2/SC/pedro-pereira/capstone/university-library) | Espejo sincronizado de entrega académica. |
-| **Borrador de Diapositivas** | [`docs/labs/presentation-slides-draft.md`](presentation-slides-draft.md) | Guión estructurado y diapositivas para la defensa y demo en vivo. |
+| **Borrador de Diapositivas** | [`docs/labs/presentation-slides-draft.typ`](presentation-slides-draft.typ) | Diapositivas en Typst (Touying / Metropolis) para la defensa y demo en vivo. |
 
 ---
 
@@ -195,7 +195,7 @@ flowchart TD
 
 ## 5. Actividad #4: Preparación de la Presentación Final (Diapositivas y Guión)
 
-Se preparó un borrador completo de 10 diapositivas para la defensa del Capstone, disponible en [`docs/labs/presentation-slides-draft.md`](presentation-slides-draft.md).
+Se preparó un borrador completo de 10 diapositivas para la defensa del Capstone en formato **Typst** con la plantilla Touying Metropolis, disponible en [`docs/labs/presentation-slides-draft.typ`](presentation-slides-draft.typ).
 
 ### 5.1 Estructura de las Diapositivas
 
