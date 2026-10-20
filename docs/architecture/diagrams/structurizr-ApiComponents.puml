@@ -1,62 +1,152 @@
 @startuml
-title <size:24>Component View: University Library SPA - Express REST API</size>\n<size:24>C4 Level 3: Component diagram — controllers, services, and infrastructure inside the Express API.</size>
-
 set separator none
+title University Library SPA - Express REST API - Components
+
 top to bottom direction
+skinparam ranksep 60
+skinparam nodesep 30
 
-<style>
-  root {
-    BackgroundColor: #ffffff
-    FontColor: #444444
-  }
-</style>
-
-!include <C4/C4>
-!include <C4/C4_Context>
-!include <C4/C4_Container>
-!include <C4/C4_Component>
-
-System_Boundary("UniversityLibrarySPA_boundary", "University Library SPA", $tags="") {
-  Container_Boundary("UniversityLibrarySPA.ExpressRESTAPI_boundary", "Express REST API", $tags="") {
-    Component(UniversityLibrarySPA.ExpressRESTAPI.ReservationController, "Reservation Controller", $techn="Express Router", $descr="Handles reserve, cancel, and my-reservations endpoints. Manages FIFO queue and hold conversion.", $tags="", $link="")
-    Component(UniversityLibrarySPA.ExpressRESTAPI.ReadingStatusController, "Reading Status Controller", $techn="Express Router", $descr="Handles set, clear, and my-books endpoints for per-user reading status tracking.", $tags="", $link="")
-    Component(UniversityLibrarySPA.ExpressRESTAPI.AuthService, "Auth Service", $techn="TypeScript service", $descr="Registration, login with bcrypt password hashing, and JWT token signing.", $tags="", $link="")
-    Component(UniversityLibrarySPA.ExpressRESTAPI.BookService, "Book Service", $techn="TypeScript service", $descr="Batched availability query (ADR-0002). Merges Open Library results with local copy counts.", $tags="", $link="")
-    Component(UniversityLibrarySPA.ExpressRESTAPI.LoanService, "Loan Service", $techn="TypeScript service", $descr="Transactional borrow/return/renew logic. Enforces BR-01 to BR-09. Triggers hold conversion on return.", $tags="", $link="")
-    Component(UniversityLibrarySPA.ExpressRESTAPI.ReservationService, "Reservation Service", $techn="TypeScript service", $descr="FIFO queue management. Hold creation (BR-11). Expired-hold release evaluated at read/write time (BR-12).", $tags="", $link="")
-    Component(UniversityLibrarySPA.ExpressRESTAPI.ReadingStatusService, "Reading Status Service", $techn="TypeScript service", $descr="Upsert and delete reading status per (user, work). Enforces one status per pair (NFR-15).", $tags="", $link="")
-    Component(UniversityLibrarySPA.ExpressRESTAPI.OpenLibraryService, "Open Library Service", $techn="TypeScript service + lru-cache", $descr="HTTP client for Open Library. LRU cache: 10 min for search, 24 h for work details (ADR-0003). Zod response validation.", $tags="", $link="")
-    Component(UniversityLibrarySPA.ExpressRESTAPI.AuthMiddleware, "Auth Middleware", $techn="Express middleware", $descr="Validates JWT from HttpOnly cookie on protected routes. Returns HTTP 401 on failure.", $tags="", $link="")
-    Component(UniversityLibrarySPA.ExpressRESTAPI.PrismaClient, "Prisma Client", $techn="Prisma 7", $descr="Type-safe ORM. All DB access goes through this layer.", $tags="", $link="")
-    Component(UniversityLibrarySPA.ExpressRESTAPI.AuthController, "Auth Controller", $techn="Express Router", $descr="Handles register, login, logout, and /me endpoints. Issues and validates JWTs via HttpOnly cookies.", $tags="", $link="")
-    Component(UniversityLibrarySPA.ExpressRESTAPI.BookController, "Book Controller", $techn="Express Router", $descr="Proxies search and work-detail requests to Open Library, merges live availability data.", $tags="", $link="")
-    Component(UniversityLibrarySPA.ExpressRESTAPI.LoanController, "Loan Controller", $techn="Express Router", $descr="Handles borrow, return, renew, and loan history endpoints.", $tags="", $link="")
-  }
-
-  ContainerDb(UniversityLibrarySPA.PostgreSQLDatabase, "PostgreSQL Database", $techn="PostgreSQL 16", $descr="Stores users, loans, reservations, holds, reading status, and work copy counts.", $tags="", $link="")
-  ContainerDb(UniversityLibrarySPA.InProcessLRUCache, "In-Process LRU Cache", $techn="lru-cache (Node.js)", $descr="Server-side in-memory cache for Open Library API responses. TTL: 10 min search, 24 h work details. No external cache required.", $tags="", $link="")
+skinparam {
+  arrowFontSize 10
+  defaultTextAlignment center
+  wrapWidth 200
+  maxMessageSize 100
 }
 
-Rel(UniversityLibrarySPA.ExpressRESTAPI.AuthController, UniversityLibrarySPA.ExpressRESTAPI.AuthService, "", $techn="", $tags="", $link="")
-Rel(UniversityLibrarySPA.ExpressRESTAPI.BookController, UniversityLibrarySPA.ExpressRESTAPI.BookService, "", $techn="", $tags="", $link="")
-Rel(UniversityLibrarySPA.ExpressRESTAPI.BookController, UniversityLibrarySPA.ExpressRESTAPI.OpenLibraryService, "", $techn="", $tags="", $link="")
-Rel(UniversityLibrarySPA.ExpressRESTAPI.LoanController, UniversityLibrarySPA.ExpressRESTAPI.LoanService, "", $techn="", $tags="", $link="")
-Rel(UniversityLibrarySPA.ExpressRESTAPI.ReservationController, UniversityLibrarySPA.ExpressRESTAPI.ReservationService, "", $techn="", $tags="", $link="")
-Rel(UniversityLibrarySPA.ExpressRESTAPI.ReadingStatusController, UniversityLibrarySPA.ExpressRESTAPI.ReadingStatusService, "", $techn="", $tags="", $link="")
-Rel(UniversityLibrarySPA.ExpressRESTAPI.AuthService, UniversityLibrarySPA.ExpressRESTAPI.PrismaClient, "Reads/writes User records", $techn="", $tags="", $link="")
-Rel(UniversityLibrarySPA.ExpressRESTAPI.BookService, UniversityLibrarySPA.ExpressRESTAPI.PrismaClient, "Reads Work, Loan, Reservation for availability", $techn="", $tags="", $link="")
-Rel(UniversityLibrarySPA.ExpressRESTAPI.BookService, UniversityLibrarySPA.ExpressRESTAPI.OpenLibraryService, "Fetches search results", $techn="", $tags="", $link="")
-Rel(UniversityLibrarySPA.ExpressRESTAPI.LoanService, UniversityLibrarySPA.ExpressRESTAPI.PrismaClient, "Reads/writes Loan and Work records (transactions)", $techn="", $tags="", $link="")
-Rel(UniversityLibrarySPA.ExpressRESTAPI.LoanService, UniversityLibrarySPA.ExpressRESTAPI.ReservationService, "Notifies on return to trigger hold conversion", $techn="", $tags="", $link="")
-Rel(UniversityLibrarySPA.ExpressRESTAPI.ReservationService, UniversityLibrarySPA.ExpressRESTAPI.PrismaClient, "Reads/writes Reservation records", $techn="", $tags="", $link="")
-Rel(UniversityLibrarySPA.ExpressRESTAPI.ReadingStatusService, UniversityLibrarySPA.ExpressRESTAPI.PrismaClient, "Reads/writes ReadingStatus records", $techn="", $tags="", $link="")
-Rel(UniversityLibrarySPA.ExpressRESTAPI.OpenLibraryService, UniversityLibrarySPA.InProcessLRUCache, "Cache-aside read/write", $techn="", $tags="", $link="")
-Rel(UniversityLibrarySPA.ExpressRESTAPI.AuthController, UniversityLibrarySPA.ExpressRESTAPI.AuthMiddleware, "Uses on protected routes", $techn="", $tags="", $link="")
-Rel(UniversityLibrarySPA.ExpressRESTAPI.LoanController, UniversityLibrarySPA.ExpressRESTAPI.AuthMiddleware, "Uses on protected routes", $techn="", $tags="", $link="")
-Rel(UniversityLibrarySPA.ExpressRESTAPI.ReservationController, UniversityLibrarySPA.ExpressRESTAPI.AuthMiddleware, "Uses on protected routes", $techn="", $tags="", $link="")
-Rel(UniversityLibrarySPA.ExpressRESTAPI.ReadingStatusController, UniversityLibrarySPA.ExpressRESTAPI.AuthMiddleware, "Uses on protected routes", $techn="", $tags="", $link="")
-Rel(UniversityLibrarySPA.ExpressRESTAPI.PrismaClient, UniversityLibrarySPA.PostgreSQLDatabase, "SQL over TCP", $techn="", $tags="", $link="")
+hide stereotype
 
-SHOW_LEGEND(true)
-hide stereotypes
+skinparam rectangle<<UniversityLibrarySPA.ExpressRESTAPI.AuthController>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ExpressRESTAPI.AuthMiddleware>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ExpressRESTAPI.AuthService>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ExpressRESTAPI.BookController>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ExpressRESTAPI.BookService>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam database<<UniversityLibrarySPA.InProcessLRUCache>> {
+  BackgroundColor #dc382d
+  FontColor #ffffff
+  BorderColor #9a271f
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ExpressRESTAPI.LoanController>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ExpressRESTAPI.LoanService>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ExpressRESTAPI.OpenLibraryService>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam database<<UniversityLibrarySPA.PostgreSQLDatabase>> {
+  BackgroundColor #336791
+  FontColor #ffffff
+  BorderColor #234865
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ExpressRESTAPI.PrismaClient>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ExpressRESTAPI.ReadingStatusController>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ExpressRESTAPI.ReadingStatusService>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ExpressRESTAPI.ReservationController>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ExpressRESTAPI.ReservationService>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ExpressRESTAPI>> {
+  BorderColor #2e6295
+  FontColor #2e6295
+  shadowing false
+}
+
+database "==PostgreSQL Database\n<size:10>[Container: PostgreSQL 16]</size>\n\nStores users, loans, reservations, holds, reading status, and work copy counts." <<UniversityLibrarySPA.PostgreSQLDatabase>> as UniversityLibrarySPA.PostgreSQLDatabase
+database "==In-Process LRU Cache\n<size:10>[Container: lru-cache (Node.js)]</size>\n\nServer-side in-memory cache for Open Library API responses. TTL: 10 min search, 24 h work details. No external cache required." <<UniversityLibrarySPA.InProcessLRUCache>> as UniversityLibrarySPA.InProcessLRUCache
+
+rectangle "Express REST API\n<size:10>[Container: Node.js + Express + TypeScript]</size>" <<UniversityLibrarySPA.ExpressRESTAPI>> {
+  rectangle "==Auth Controller\n<size:10>[Component: Express Router]</size>\n\nHandles register, login, logout, and /me endpoints. Issues and validates JWTs via HttpOnly cookies." <<UniversityLibrarySPA.ExpressRESTAPI.AuthController>> as UniversityLibrarySPA.ExpressRESTAPI.AuthController
+  rectangle "==Book Controller\n<size:10>[Component: Express Router]</size>\n\nProxies search and work-detail requests to Open Library, merges live availability data." <<UniversityLibrarySPA.ExpressRESTAPI.BookController>> as UniversityLibrarySPA.ExpressRESTAPI.BookController
+  rectangle "==Loan Controller\n<size:10>[Component: Express Router]</size>\n\nHandles borrow, return, renew, and loan history endpoints." <<UniversityLibrarySPA.ExpressRESTAPI.LoanController>> as UniversityLibrarySPA.ExpressRESTAPI.LoanController
+  rectangle "==Reservation Controller\n<size:10>[Component: Express Router]</size>\n\nHandles reserve, cancel, and my-reservations endpoints. Manages FIFO queue and hold conversion." <<UniversityLibrarySPA.ExpressRESTAPI.ReservationController>> as UniversityLibrarySPA.ExpressRESTAPI.ReservationController
+  rectangle "==Reading Status Controller\n<size:10>[Component: Express Router]</size>\n\nHandles set, clear, and my-books endpoints for per-user reading status tracking." <<UniversityLibrarySPA.ExpressRESTAPI.ReadingStatusController>> as UniversityLibrarySPA.ExpressRESTAPI.ReadingStatusController
+  rectangle "==Auth Service\n<size:10>[Component: TypeScript service]</size>\n\nRegistration, login with bcrypt password hashing, and JWT token signing." <<UniversityLibrarySPA.ExpressRESTAPI.AuthService>> as UniversityLibrarySPA.ExpressRESTAPI.AuthService
+  rectangle "==Book Service\n<size:10>[Component: TypeScript service]</size>\n\nBatched availability query (ADR-0002). Merges Open Library results with local copy counts." <<UniversityLibrarySPA.ExpressRESTAPI.BookService>> as UniversityLibrarySPA.ExpressRESTAPI.BookService
+  rectangle "==Loan Service\n<size:10>[Component: TypeScript service]</size>\n\nTransactional borrow/return/renew logic. Enforces BR-01 to BR-09. Triggers hold conversion on return." <<UniversityLibrarySPA.ExpressRESTAPI.LoanService>> as UniversityLibrarySPA.ExpressRESTAPI.LoanService
+  rectangle "==Reservation Service\n<size:10>[Component: TypeScript service]</size>\n\nFIFO queue management. Hold creation (BR-11). Expired-hold release evaluated at read/write time (BR-12)." <<UniversityLibrarySPA.ExpressRESTAPI.ReservationService>> as UniversityLibrarySPA.ExpressRESTAPI.ReservationService
+  rectangle "==Reading Status Service\n<size:10>[Component: TypeScript service]</size>\n\nUpsert and delete reading status per (user, work). Enforces one status per pair (NFR-15)." <<UniversityLibrarySPA.ExpressRESTAPI.ReadingStatusService>> as UniversityLibrarySPA.ExpressRESTAPI.ReadingStatusService
+  rectangle "==Open Library Service\n<size:10>[Component: TypeScript service + lru-cache]</size>\n\nHTTP client for Open Library. LRU cache: 10 min for search, 24 h for work details (ADR-0003). Zod response validation." <<UniversityLibrarySPA.ExpressRESTAPI.OpenLibraryService>> as UniversityLibrarySPA.ExpressRESTAPI.OpenLibraryService
+  rectangle "==Auth Middleware\n<size:10>[Component: Express middleware]</size>\n\nValidates JWT from HttpOnly cookie on protected routes. Returns HTTP 401 on failure." <<UniversityLibrarySPA.ExpressRESTAPI.AuthMiddleware>> as UniversityLibrarySPA.ExpressRESTAPI.AuthMiddleware
+  rectangle "==Prisma Client\n<size:10>[Component: Prisma 7]</size>\n\nType-safe ORM. All DB access goes through this layer." <<UniversityLibrarySPA.ExpressRESTAPI.PrismaClient>> as UniversityLibrarySPA.ExpressRESTAPI.PrismaClient
+}
+
+UniversityLibrarySPA.ExpressRESTAPI.AuthController -[#707070,thickness=2]-> UniversityLibrarySPA.ExpressRESTAPI.AuthService : "<color:#707070>"
+UniversityLibrarySPA.ExpressRESTAPI.BookController -[#707070,thickness=2]-> UniversityLibrarySPA.ExpressRESTAPI.BookService : "<color:#707070>"
+UniversityLibrarySPA.ExpressRESTAPI.BookController -[#707070,thickness=2]-> UniversityLibrarySPA.ExpressRESTAPI.OpenLibraryService : "<color:#707070>"
+UniversityLibrarySPA.ExpressRESTAPI.LoanController -[#707070,thickness=2]-> UniversityLibrarySPA.ExpressRESTAPI.LoanService : "<color:#707070>"
+UniversityLibrarySPA.ExpressRESTAPI.ReservationController -[#707070,thickness=2]-> UniversityLibrarySPA.ExpressRESTAPI.ReservationService : "<color:#707070>"
+UniversityLibrarySPA.ExpressRESTAPI.ReadingStatusController -[#707070,thickness=2]-> UniversityLibrarySPA.ExpressRESTAPI.ReadingStatusService : "<color:#707070>"
+UniversityLibrarySPA.ExpressRESTAPI.AuthService -[#707070,thickness=2]-> UniversityLibrarySPA.ExpressRESTAPI.PrismaClient : "<color:#707070>Reads/writes User records"
+UniversityLibrarySPA.ExpressRESTAPI.BookService -[#707070,thickness=2]-> UniversityLibrarySPA.ExpressRESTAPI.PrismaClient : "<color:#707070>Reads Work, Loan, Reservation for availability"
+UniversityLibrarySPA.ExpressRESTAPI.BookService -[#707070,thickness=2]-> UniversityLibrarySPA.ExpressRESTAPI.OpenLibraryService : "<color:#707070>Fetches search results"
+UniversityLibrarySPA.ExpressRESTAPI.LoanService -[#707070,thickness=2]-> UniversityLibrarySPA.ExpressRESTAPI.PrismaClient : "<color:#707070>Reads/writes Loan and Work records (transactions)"
+UniversityLibrarySPA.ExpressRESTAPI.LoanService -[#707070,thickness=2]-> UniversityLibrarySPA.ExpressRESTAPI.ReservationService : "<color:#707070>Notifies on return to trigger hold conversion"
+UniversityLibrarySPA.ExpressRESTAPI.ReservationService -[#707070,thickness=2]-> UniversityLibrarySPA.ExpressRESTAPI.PrismaClient : "<color:#707070>Reads/writes Reservation records"
+UniversityLibrarySPA.ExpressRESTAPI.ReadingStatusService -[#707070,thickness=2]-> UniversityLibrarySPA.ExpressRESTAPI.PrismaClient : "<color:#707070>Reads/writes ReadingStatus records"
+UniversityLibrarySPA.ExpressRESTAPI.OpenLibraryService -[#707070,thickness=2]-> UniversityLibrarySPA.InProcessLRUCache : "<color:#707070>Cache-aside read/write"
+UniversityLibrarySPA.ExpressRESTAPI.AuthController -[#707070,thickness=2]-> UniversityLibrarySPA.ExpressRESTAPI.AuthMiddleware : "<color:#707070>Uses on protected routes"
+UniversityLibrarySPA.ExpressRESTAPI.LoanController -[#707070,thickness=2]-> UniversityLibrarySPA.ExpressRESTAPI.AuthMiddleware : "<color:#707070>Uses on protected routes"
+UniversityLibrarySPA.ExpressRESTAPI.ReservationController -[#707070,thickness=2]-> UniversityLibrarySPA.ExpressRESTAPI.AuthMiddleware : "<color:#707070>Uses on protected routes"
+UniversityLibrarySPA.ExpressRESTAPI.ReadingStatusController -[#707070,thickness=2]-> UniversityLibrarySPA.ExpressRESTAPI.AuthMiddleware : "<color:#707070>Uses on protected routes"
+UniversityLibrarySPA.ExpressRESTAPI.PrismaClient -[#707070,thickness=2]-> UniversityLibrarySPA.PostgreSQLDatabase : "<color:#707070>SQL over TCP"
 @enduml

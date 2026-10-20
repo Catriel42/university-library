@@ -17,7 +17,10 @@ graph TD
     AppLayout -->|Route: /| CatalogPage["CatalogPage"]
     AppLayout -->|Route: /book/:id| BookDetailPage["BookDetailPage"]
     AppLayout -->|Route: /loans| MyLoansPage["MyLoansPage"]
+    AppLayout -->|Route: /reservations| MyReservationsPage["MyReservationsPage"]
+    AppLayout -->|Route: /my-books| MyBooksPage["MyBooksPage"]
     AppLayout -->|Route: /login| AuthPage["AuthPage"]
+    AppLayout -->|ThemeToggle| ThemeToggle["ThemeToggle"]
 
     CatalogPage -->|uses| CategoryFilterBar["CategoryFilterBar"]
     CatalogPage -->|uses| CatalogSearchForm["CatalogSearchForm"]
@@ -46,6 +49,7 @@ graph TD
     BookDetailPage -->|uses| BookActionCard["BookActionCard"]
     BookActionCard -->|uses| Button
     BookActionCard -->|uses| AlertMessage["AlertMessage (UI)"]
+    BookActionCard -->|uses| ReadingStatusSelector["ReadingStatusSelector"]
     BookDetailPage -->|uses| BookDescription["BookDescription"]
     BookDetailPage -->|uses| Button
     BookDetailPage -->|uses| Skeleton
@@ -62,6 +66,23 @@ graph TD
     LoanHistoryTable -->|uses| BookCoverImage
     MyLoansPage -->|uses| Skeleton
 
+    MyReservationsPage -->|uses| AlertMessage
+    MyReservationsPage -->|uses| ReservationCard["ReservationCard"]
+    ReservationCard -->|uses| BookCoverImage
+    ReservationCard -->|uses| Button
+    ReservationCard -->|uses| Card
+    MyReservationsPage -->|uses| ReservationEmptyState["ReservationEmptyState"]
+    ReservationEmptyState -->|uses| Button
+    MyReservationsPage -->|uses| Skeleton
+
+    MyBooksPage -->|uses| AlertMessage
+    MyBooksPage -->|uses| ReadingBookCard["ReadingBookCard"]
+    ReadingBookCard -->|uses| BookCoverImage
+    ReadingBookCard -->|uses| Card
+    MyBooksPage -->|uses| ReadingEmptyState["ReadingEmptyState"]
+    ReadingEmptyState -->|uses| Button
+    MyBooksPage -->|uses| Skeleton
+
     AuthPage -->|uses| AlertMessage
     AuthPage -->|uses| AuthHeader["AuthHeader"]
     AuthPage -->|uses| AuthModeSwitcher["AuthModeSwitcher"]
@@ -70,6 +91,8 @@ graph TD
 
     style App fill:#4f46e5
     style AppLayout fill:#7c3aed
+    style MyReservationsPage fill:#8b5cf6
+    style MyBooksPage fill:#ec4899
     style CatalogPage fill:#06b6d4
     style BookDetailPage fill:#10b981
     style MyLoansPage fill:#f59e0b
@@ -239,6 +262,59 @@ graph TD
     style LoanEmptyState fill:#fecaca,color:#000
     style LoanHistoryTable fill:#fef3c7,color:#000
     style LoanOverdueBadge fill:#fef3c7,color:#000
+    style Button fill:#ec4899,color:#fff
+    style Card fill:#ec4899,color:#fff
+    style AlertMessage fill:#ec4899,color:#fff
+    style Skeleton fill:#ec4899,color:#fff
+    style BookCoverImage fill:#ec4899,color:#fff
+```
+
+## 6. Estructura por Dominio (Reservations)
+
+```mermaid
+graph TD
+    MyReservationsPage["📄 MyReservationsPage"]
+
+    MyReservationsPage -->|queue| ReservationCard["🟨 ReservationCard"]
+    ReservationCard -->|uses| BookCoverImage["BookCoverImage"]
+    ReservationCard -->|uses| Button["Button"]
+    ReservationCard -->|uses| Card["Card"]
+
+    MyReservationsPage -->|empty| ReservationEmptyState["🟥 ReservationEmptyState"]
+    ReservationEmptyState -->|uses| Button
+
+    MyReservationsPage -->|error| AlertMessage["AlertMessage"]
+    MyReservationsPage -->|loading| Skeleton["Skeleton"]
+
+    style MyReservationsPage fill:#8b5cf6,color:#fff
+    style ReservationCard fill:#ede9fe,color:#000
+    style ReservationEmptyState fill:#fecaca,color:#000
+    style Button fill:#ec4899,color:#fff
+    style Card fill:#ec4899,color:#fff
+    style AlertMessage fill:#ec4899,color:#fff
+    style Skeleton fill:#ec4899,color:#fff
+    style BookCoverImage fill:#ec4899,color:#fff
+```
+
+## 7. Estructura por Dominio (Reading Tracker - My Books)
+
+```mermaid
+graph TD
+    MyBooksPage["📄 MyBooksPage"]
+
+    MyBooksPage -->|reading / completed| ReadingBookCard["🟨 ReadingBookCard"]
+    ReadingBookCard -->|uses| BookCoverImage["BookCoverImage"]
+    ReadingBookCard -->|uses| Card["Card"]
+
+    MyBooksPage -->|empty| ReadingEmptyState["🟥 ReadingEmptyState"]
+    ReadingEmptyState -->|uses| Button["Button"]
+
+    MyBooksPage -->|error| AlertMessage["AlertMessage"]
+    MyBooksPage -->|loading| Skeleton["Skeleton"]
+
+    style MyBooksPage fill:#ec4899,color:#fff
+    style ReadingBookCard fill:#fce7f3,color:#000
+    style ReadingEmptyState fill:#fecaca,color:#000
     style Button fill:#ec4899,color:#fff
     style Card fill:#ec4899,color:#fff
     style AlertMessage fill:#ec4899,color:#fff

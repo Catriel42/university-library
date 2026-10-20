@@ -1,0 +1,64 @@
+@startuml
+set separator none
+title University Library SPA - Dynamic
+
+top to bottom direction
+skinparam ranksep 60
+skinparam nodesep 30
+
+skinparam {
+  arrowFontSize 10
+  defaultTextAlignment center
+  wrapWidth 200
+  maxMessageSize 100
+}
+
+hide stereotype
+
+skinparam rectangle<<UniversityLibrarySPA.ExpressRESTAPI>> {
+  BackgroundColor #438dd5
+  FontColor #ffffff
+  BorderColor #2e6295
+  shadowing false
+}
+skinparam database<<UniversityLibrarySPA.PostgreSQLDatabase>> {
+  BackgroundColor #336791
+  FontColor #ffffff
+  BorderColor #234865
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA>> {
+  BackgroundColor #438dd5
+  FontColor #ffffff
+  BorderColor #2e6295
+  shadowing false
+}
+skinparam person<<RegisteredUser>> {
+  BackgroundColor #0d7377
+  FontColor #ffffff
+  BorderColor #095053
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA>> {
+  BorderColor #0b4884
+  FontColor #0b4884
+  shadowing false
+}
+
+rectangle "University Library SPA\n<size:10>[Software System]</size>" <<UniversityLibrarySPA>> {
+  rectangle "==React SPA\n<size:10>[Container: React 19 + TypeScript (Vite)]</size>\n\nClient-side single-page application. Handles routing, state management, and all user interactions." <<UniversityLibrarySPA.ReactSPA>> as UniversityLibrarySPA.ReactSPA
+  rectangle "==Express REST API\n<size:10>[Container: Node.js + Express + TypeScript]</size>\n\nServes the frontend, enforces all business rules (loans, reservations, holds), proxies and caches Open Library, and manages authentication." <<UniversityLibrarySPA.ExpressRESTAPI>> as UniversityLibrarySPA.ExpressRESTAPI
+  database "==PostgreSQL Database\n<size:10>[Container: PostgreSQL 16]</size>\n\nStores users, loans, reservations, holds, reading status, and work copy counts." <<UniversityLibrarySPA.PostgreSQLDatabase>> as UniversityLibrarySPA.PostgreSQLDatabase
+}
+
+person "==Registered User\n<size:10>[Person]</size>\n\nA student or faculty member. Can borrow, reserve, renew, return books, and track reading status." <<RegisteredUser>> as RegisteredUser
+
+RegisteredUser -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA : "<color:#707070>1. Clicks 'Reserve Copy' when 0 available\n<color:#707070><size:8>[HTTPS]</size>"
+UniversityLibrarySPA.ReactSPA -[#707070,thickness=2]-> UniversityLibrarySPA.ExpressRESTAPI : "<color:#707070>2. POST /api/reservations  { workKey }\n<color:#707070><size:8>[HTTPS / JSON]</size>"
+UniversityLibrarySPA.ExpressRESTAPI -[#707070,thickness=2]-> UniversityLibrarySPA.PostgreSQLDatabase : "<color:#707070>3. BEGIN TRANSACTION — verify 0 available, no duplicate reservation\n<color:#707070><size:8>[TCP / Prisma ORM]</size>"
+UniversityLibrarySPA.ExpressRESTAPI <-[#707070,thickness=2]- UniversityLibrarySPA.PostgreSQLDatabase : "<color:#707070>4. Returns queue state\n<color:#707070><size:8>[TCP / Prisma ORM]</size>"
+UniversityLibrarySPA.ExpressRESTAPI -[#707070,thickness=2]-> UniversityLibrarySPA.PostgreSQLDatabase : "<color:#707070>5. INSERT Reservation with FIFO position\n<color:#707070><size:8>[TCP / Prisma ORM]</size>"
+UniversityLibrarySPA.ExpressRESTAPI <-[#707070,thickness=2]- UniversityLibrarySPA.PostgreSQLDatabase : "<color:#707070>6. COMMIT — Reservation created, position = #N\n<color:#707070><size:8>[TCP / Prisma ORM]</size>"
+UniversityLibrarySPA.ReactSPA <-[#707070,thickness=2]- UniversityLibrarySPA.ExpressRESTAPI : "<color:#707070>7. 201 Created — { reservation, position }\n<color:#707070><size:8>[HTTPS / JSON]</size>"
+RegisteredUser <-[#707070,thickness=2]- UniversityLibrarySPA.ReactSPA : "<color:#707070>8. Shows reservation confirmation with queue position\n<color:#707070><size:8>[HTTPS]</size>"
+@enduml

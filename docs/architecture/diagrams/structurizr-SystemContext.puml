@@ -1,28 +1,51 @@
 @startuml
-title <size:24>System Context View: University Library SPA</size>\n<size:24>C4 Level 1: System Context — how the University Library SPA fits into the wider environment.</size>
-
 set separator none
+title University Library SPA - System Context
+
 top to bottom direction
+skinparam ranksep 60
+skinparam nodesep 30
 
-<style>
-  root {
-    BackgroundColor: #ffffff
-    FontColor: #444444
-  }
-</style>
+skinparam {
+  arrowFontSize 10
+  defaultTextAlignment center
+  wrapWidth 200
+  maxMessageSize 100
+}
 
-!include <C4/C4>
-!include <C4/C4_Context>
+hide stereotype
 
-Person(RegisteredUser, "Registered User", $descr="A student or faculty member. Can borrow, reserve, renew, return books, and track reading status.", $tags="", $link="")
-Person(Visitor, "Visitor", $descr="An unauthenticated person. Can browse and search the catalog but cannot borrow or reserve.", $tags="", $link="")
-System(OpenLibrary, "Open Library", $descr="Public book catalog API by the Internet Archive. Provides bibliographic metadata, cover images, and search.", $tags="", $link="")
-System(UniversityLibrarySPA, "University Library SPA", $descr="Single-Page Application that allows users to browse the catalog, borrow and reserve books, and track their reading status.", $tags="", $link="")
+skinparam rectangle<<OpenLibrary>> {
+  BackgroundColor #6b7280
+  FontColor #ffffff
+  BorderColor #4a4f59
+  shadowing false
+}
+skinparam person<<RegisteredUser>> {
+  BackgroundColor #0d7377
+  FontColor #ffffff
+  BorderColor #095053
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA>> {
+  BackgroundColor #1168bd
+  FontColor #ffffff
+  BorderColor #0b4884
+  shadowing false
+}
+skinparam person<<Visitor>> {
+  BackgroundColor #0d7377
+  FontColor #ffffff
+  BorderColor #095053
+  shadowing false
+}
 
-Rel(RegisteredUser, UniversityLibrarySPA, "Browses catalog, borrows and reserves books, tracks reading status", $techn="HTTPS", $tags="", $link="")
-Rel(Visitor, UniversityLibrarySPA, "Browses and searches the catalog", $techn="HTTPS", $tags="", $link="")
-Rel(UniversityLibrarySPA, OpenLibrary, "Fetches bibliographic metadata and cover images", $techn="HTTPS / REST", $tags="", $link="")
+person "==Registered User\n<size:10>[Person]</size>\n\nA student or faculty member. Can borrow, reserve, renew, return books, and track reading status." <<RegisteredUser>> as RegisteredUser
+person "==Visitor\n<size:10>[Person]</size>\n\nAn unauthenticated person. Can browse and search the catalog but cannot borrow or reserve." <<Visitor>> as Visitor
+rectangle "==Open Library\n<size:10>[Software System]</size>\n\nPublic book catalog API by the Internet Archive. Provides bibliographic metadata, cover images, and search." <<OpenLibrary>> as OpenLibrary
+rectangle "==University Library SPA\n<size:10>[Software System]</size>\n\nSingle-Page Application that allows users to browse the catalog, borrow and reserve books, and track their reading status." <<UniversityLibrarySPA>> as UniversityLibrarySPA
 
-SHOW_LEGEND(true)
-hide stereotypes
+RegisteredUser -[#707070,thickness=2]-> UniversityLibrarySPA : "<color:#707070>Browses catalog, borrows and reserves books, tracks reading status\n<color:#707070><size:8>[HTTPS]</size>"
+Visitor -[#707070,thickness=2]-> UniversityLibrarySPA : "<color:#707070>Browses and searches the catalog\n<color:#707070><size:8>[HTTPS]</size>"
+UniversityLibrarySPA -[#707070,thickness=2]-> OpenLibrary : "<color:#707070>Fetches bibliographic metadata and cover images\n<color:#707070><size:8>[HTTPS / REST]</size>"
 @enduml

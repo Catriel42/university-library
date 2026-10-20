@@ -63,8 +63,28 @@ MyLoansPage (94 líneas)
 │   └── BookCoverImage
 └── Skeleton
 
+MyReservationsPage
+├── AlertMessage
+├── ReservationCard
+│   ├── BookCoverImage
+│   ├── Button
+│   └── Card
+├── ReservationEmptyState
+│   └── Button
+└── Skeleton
+
+MyBooksPage
+├── AlertMessage
+├── ReadingBookCard
+│   ├── BookCoverImage
+│   └── Card
+├── ReadingEmptyState
+│   └── Button
+└── Skeleton
+
 AppLayout (54 líneas)
-└── Button
+├── Button
+└── ThemeToggle
 ```
 
 ---
@@ -77,14 +97,22 @@ AppLayout (54 líneas)
 | **CatalogPage**           | CategoryFilterBar, CatalogSearchForm, CatalogToolbar, CatalogPagination, CatalogResultsGrid, CatalogEmptyState, CatalogErrorState | Page              |
 | **BookDetailPage**        | BookHero, BookMeta, BookAvailabilityPanel, BookActionCard, BookDescription, Button, Skeleton                                      | Page              |
 | **MyLoansPage**           | AlertMessage, LoanCard, LoanEmptyState, LoanHistoryTable, Skeleton                                                                | Page              |
-| **AppLayout**             | Button                                                                                                                            | Layout            |
+| **MyReservationsPage**    | AlertMessage, ReservationCard, ReservationEmptyState, Skeleton                                                                    | Page              |
+| **MyBooksPage**           | AlertMessage, ReadingBookCard, ReadingEmptyState, Skeleton                                                                        | Page              |
+| **AppLayout**             | Button, ThemeToggle                                                                                                               | Layout            |
 | **CatalogResultsGrid**    | BookCard, Skeleton                                                                                                                | Catalog Container |
 | **BookCard**              | BookCoverImage, CopyPips, Button, Card                                                                                            | Catalog Item      |
 | **LoanCard**              | BookCoverImage, Button, Card, LoanOverdueBadge                                                                                    | Loan Item         |
-| **BookActionCard**        | Button, AlertMessage                                                                                                              | Book Detail Sub   |
+| **BookActionCard**        | Button, AlertMessage, ReadingStatusSelector                                                                                       | Book Detail Sub   |
+| **ReadingStatusSelector** | —                                                                                                                                 | Book Detail Sub   |
 | **BookAvailabilityPanel** | CopyPips                                                                                                                          | Book Detail Sub   |
 | **BookHero**              | BookCoverImage                                                                                                                    | Book Detail Sub   |
 | **LoanHistoryTable**      | BookCoverImage                                                                                                                    | Loan Sub          |
+| **ReservationCard**       | BookCoverImage, Button, Card                                                                                                      | Reservation Sub   |
+| **ReservationEmptyState** | Button                                                                                                                            | Reservation Sub   |
+| **ReadingBookCard**       | BookCoverImage, Card                                                                                                              | Reading Sub       |
+| **ReadingEmptyState**     | Button                                                                                                                            | Reading Sub       |
+| **ThemeToggle**           | useTheme                                                                                                                          | Layout Sub        |
 | **CatalogSearchForm**     | Button                                                                                                                            | Catalog Sub       |
 | **CatalogToolbar**        | Button                                                                                                                            | Catalog Sub       |
 | **CatalogPagination**     | Button                                                                                                                            | Catalog Sub       |

@@ -1,0 +1,451 @@
+@startuml
+set separator none
+title University Library SPA - React SPA - Components
+
+top to bottom direction
+skinparam ranksep 60
+skinparam nodesep 30
+
+skinparam {
+  arrowFontSize 10
+  defaultTextAlignment center
+  wrapWidth 200
+  maxMessageSize 100
+}
+
+hide stereotype
+
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.AlertMessage>> {
+  BackgroundColor #ec4899
+  FontColor #ffffff
+  BorderColor #a5326b
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.AppLayout>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.AuthContext>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.AuthPage>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.Badge>> {
+  BackgroundColor #ec4899
+  FontColor #ffffff
+  BorderColor #a5326b
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.BookActionCard>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.BookAvailabilityPanel>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.BookCard>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.BookCoverImage>> {
+  BackgroundColor #ec4899
+  FontColor #ffffff
+  BorderColor #a5326b
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.BookDescription>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.BookDetailPage>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.BookHero>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.BookMeta>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.Button>> {
+  BackgroundColor #ec4899
+  FontColor #ffffff
+  BorderColor #a5326b
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.Card>> {
+  BackgroundColor #ec4899
+  FontColor #ffffff
+  BorderColor #a5326b
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.CatalogEmptyState>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.CatalogErrorState>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.CatalogPage>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.CatalogPagination>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.CatalogResultsGrid>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.CatalogSearchForm>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.CatalogToolbar>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.CategoryFilterBar>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.CopyPips>> {
+  BackgroundColor #ec4899
+  FontColor #ffffff
+  BorderColor #a5326b
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ExpressRESTAPI>> {
+  BackgroundColor #438dd5
+  FontColor #ffffff
+  BorderColor #2e6295
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.Input>> {
+  BackgroundColor #ec4899
+  FontColor #ffffff
+  BorderColor #a5326b
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.LoanCard>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.LoanEmptyState>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.LoanHistoryTable>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.LoanOverdueBadge>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.MyBooksPage>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.MyLoansPage>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.MyReservationsPage>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.ProtectedRoute>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.ReadingBookCard>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.ReadingEmptyState>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.ReadingStatusSelector>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.ReservationCard>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.ReservationEmptyState>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.Router>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.Skeleton>> {
+  BackgroundColor #ec4899
+  FontColor #ffffff
+  BorderColor #a5326b
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.ThemeContext>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.ThemeToggle>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.useBookDetail>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.useCatalogSearch>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.useMyLoans>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.useReadingStatus>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA.useReservations>> {
+  BackgroundColor #85bbdd
+  FontColor #000000
+  BorderColor #5d829a
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA>> {
+  BorderColor #2e6295
+  FontColor #2e6295
+  shadowing false
+}
+
+rectangle "==Express REST API\n<size:10>[Container: Node.js + Express + TypeScript]</size>\n\nServes the frontend, enforces all business rules (loans, reservations, holds), proxies and caches Open Library, and manages authentication." <<UniversityLibrarySPA.ExpressRESTAPI>> as UniversityLibrarySPA.ExpressRESTAPI
+
+rectangle "React SPA\n<size:10>[Container: React 19 + TypeScript (Vite)]</size>" <<UniversityLibrarySPA.ReactSPA>> {
+  rectangle "==Router\n<size:10>[Component: React Router]</size>\n\nDeclares all application routes and wraps protected pages in ProtectedRoute." <<UniversityLibrarySPA.ReactSPA.Router>> as UniversityLibrarySPA.ReactSPA.Router
+  rectangle "==ProtectedRoute\n<size:10>[Component: React Component]</size>\n\nRoute guard that redirects unauthenticated users to /login." <<UniversityLibrarySPA.ReactSPA.ProtectedRoute>> as UniversityLibrarySPA.ReactSPA.ProtectedRoute
+  rectangle "==useCatalogSearch\n<size:10>[Component: Custom Hook]</size>\n\nManages catalog search state, pagination, filters, sorting, and debounced API calls to /api/books." <<UniversityLibrarySPA.ReactSPA.useCatalogSearch>> as UniversityLibrarySPA.ReactSPA.useCatalogSearch
+  rectangle "==useBookDetail\n<size:10>[Component: Custom Hook]</size>\n\nFetches single work details and availability from /api/books/:key." <<UniversityLibrarySPA.ReactSPA.useBookDetail>> as UniversityLibrarySPA.ReactSPA.useBookDetail
+  rectangle "==useMyLoans\n<size:10>[Component: Custom Hook]</size>\n\nFetches active and returned loans, handles borrow, return, and renew actions via /api/loans." <<UniversityLibrarySPA.ReactSPA.useMyLoans>> as UniversityLibrarySPA.ReactSPA.useMyLoans
+  rectangle "==useReservations\n<size:10>[Component: Custom Hook]</size>\n\nFetches user reservations, handles reserve/cancel/borrow-from-hold via /api/reservations." <<UniversityLibrarySPA.ReactSPA.useReservations>> as UniversityLibrarySPA.ReactSPA.useReservations
+  rectangle "==useReadingStatus\n<size:10>[Component: Custom Hook]</size>\n\nFetches and manages reading status (READING/COMPLETED) per work via /api/reading-status." <<UniversityLibrarySPA.ReactSPA.useReadingStatus>> as UniversityLibrarySPA.ReactSPA.useReadingStatus
+  rectangle "==CatalogPage\n<size:10>[Component: React Page]</size>\n\nMain catalog view: search form, category filter bar, toolbar, results grid with BookCards, pagination, empty/error states." <<UniversityLibrarySPA.ReactSPA.CatalogPage>> as UniversityLibrarySPA.ReactSPA.CatalogPage
+  rectangle "==BookDetailPage\n<size:10>[Component: React Page]</size>\n\nSingle-work view: BookHero, BookMeta, availability panel, action card (borrow/reserve), reading status selector, description." <<UniversityLibrarySPA.ReactSPA.BookDetailPage>> as UniversityLibrarySPA.ReactSPA.BookDetailPage
+  rectangle "==AuthPage\n<size:10>[Component: React Page]</size>\n\nLogin and registration form with mode switcher, validation errors, and card layout." <<UniversityLibrarySPA.ReactSPA.AuthPage>> as UniversityLibrarySPA.ReactSPA.AuthPage
+  rectangle "==MyLoansPage\n<size:10>[Component: React Page]</size>\n\nActive loans dashboard with LoanCards (return/renew actions), loan history table, and empty/loading states." <<UniversityLibrarySPA.ReactSPA.MyLoansPage>> as UniversityLibrarySPA.ReactSPA.MyLoansPage
+  rectangle "==MyReservationsPage\n<size:10>[Component: React Page]</size>\n\nReservations queue view showing ReservationCards with queue position, hold countdown, borrow/cancel actions." <<UniversityLibrarySPA.ReactSPA.MyReservationsPage>> as UniversityLibrarySPA.ReactSPA.MyReservationsPage
+  rectangle "==MyBooksPage\n<size:10>[Component: React Page]</size>\n\nReading tracker dashboard: grouped by READING and COMPLETED status with ReadingBookCards." <<UniversityLibrarySPA.ReactSPA.MyBooksPage>> as UniversityLibrarySPA.ReactSPA.MyBooksPage
+  rectangle "==CatalogSearchForm\n<size:10>[Component: React Component]</size>\n\nSearch input with submit button. Emits search query to CatalogPage." <<UniversityLibrarySPA.ReactSPA.CatalogSearchForm>> as UniversityLibrarySPA.ReactSPA.CatalogSearchForm
+  rectangle "==CategoryFilterBar\n<size:10>[Component: React Component]</size>\n\nHorizontal scrollable bar of subject category pills for filtering catalog results." <<UniversityLibrarySPA.ReactSPA.CategoryFilterBar>> as UniversityLibrarySPA.ReactSPA.CategoryFilterBar
+  rectangle "==CatalogToolbar\n<size:10>[Component: React Component]</size>\n\nDisplays result count, sort dropdown, and hide-unavailable toggle." <<UniversityLibrarySPA.ReactSPA.CatalogToolbar>> as UniversityLibrarySPA.ReactSPA.CatalogToolbar
+  rectangle "==CatalogResultsGrid\n<size:10>[Component: React Component]</size>\n\nResponsive grid of BookCards with skeleton loading state." <<UniversityLibrarySPA.ReactSPA.CatalogResultsGrid>> as UniversityLibrarySPA.ReactSPA.CatalogResultsGrid
+  rectangle "==BookCard\n<size:10>[Component: React Component]</size>\n\nCatalog item card: cover image, title, author, availability pips, and borrow button." <<UniversityLibrarySPA.ReactSPA.BookCard>> as UniversityLibrarySPA.ReactSPA.BookCard
+  rectangle "==CatalogPagination\n<size:10>[Component: React Component]</size>\n\nPage number navigation with prev/next buttons." <<UniversityLibrarySPA.ReactSPA.CatalogPagination>> as UniversityLibrarySPA.ReactSPA.CatalogPagination
+  rectangle "==CatalogEmptyState\n<size:10>[Component: React Component]</size>\n\nEmpty state illustration when no catalog results match the query." <<UniversityLibrarySPA.ReactSPA.CatalogEmptyState>> as UniversityLibrarySPA.ReactSPA.CatalogEmptyState
+  rectangle "==CatalogErrorState\n<size:10>[Component: React Component]</size>\n\nError state with retry button when catalog fetch fails." <<UniversityLibrarySPA.ReactSPA.CatalogErrorState>> as UniversityLibrarySPA.ReactSPA.CatalogErrorState
+  rectangle "==BookHero\n<size:10>[Component: React Component]</size>\n\nLarge cover image with title overlay for the detail page header." <<UniversityLibrarySPA.ReactSPA.BookHero>> as UniversityLibrarySPA.ReactSPA.BookHero
+  rectangle "==BookMeta\n<size:10>[Component: React Component]</size>\n\nDisplays author, publish year, subjects, and edition count." <<UniversityLibrarySPA.ReactSPA.BookMeta>> as UniversityLibrarySPA.ReactSPA.BookMeta
+  rectangle "==BookAvailabilityPanel\n<size:10>[Component: React Component]</size>\n\nShows available/total copies with CopyPips visualization and return forecast." <<UniversityLibrarySPA.ReactSPA.BookAvailabilityPanel>> as UniversityLibrarySPA.ReactSPA.BookAvailabilityPanel
+  rectangle "==BookActionCard\n<size:10>[Component: React Component]</size>\n\nPrimary action card: borrow, return, or reserve button depending on availability and loan state. Embeds ReadingStatusSelector." <<UniversityLibrarySPA.ReactSPA.BookActionCard>> as UniversityLibrarySPA.ReactSPA.BookActionCard
+  rectangle "==BookDescription\n<size:10>[Component: React Component]</size>\n\nExpandable/collapsible book synopsis section." <<UniversityLibrarySPA.ReactSPA.BookDescription>> as UniversityLibrarySPA.ReactSPA.BookDescription
+  rectangle "==ReadingStatusSelector\n<size:10>[Component: React Component]</size>\n\nDropdown to set a work as READING, COMPLETED, or clear status. Appears in BookActionCard." <<UniversityLibrarySPA.ReactSPA.ReadingStatusSelector>> as UniversityLibrarySPA.ReactSPA.ReadingStatusSelector
+  rectangle "==LoanCard\n<size:10>[Component: React Component]</size>\n\nActive loan card: cover, title, due date, overdue badge, return and renew buttons with renewal counter (0/2)." <<UniversityLibrarySPA.ReactSPA.LoanCard>> as UniversityLibrarySPA.ReactSPA.LoanCard
+  rectangle "==LoanEmptyState\n<size:10>[Component: React Component]</size>\n\nEmpty state when user has no active loans." <<UniversityLibrarySPA.ReactSPA.LoanEmptyState>> as UniversityLibrarySPA.ReactSPA.LoanEmptyState
+  rectangle "==LoanHistoryTable\n<size:10>[Component: React Component]</size>\n\nTable of returned loans with cover thumbnail, title, borrow/return dates." <<UniversityLibrarySPA.ReactSPA.LoanHistoryTable>> as UniversityLibrarySPA.ReactSPA.LoanHistoryTable
+  rectangle "==LoanOverdueBadge\n<size:10>[Component: React Component]</size>\n\nRed badge shown on overdue loans with days-overdue count." <<UniversityLibrarySPA.ReactSPA.LoanOverdueBadge>> as UniversityLibrarySPA.ReactSPA.LoanOverdueBadge
+  rectangle "==ReservationCard\n<size:10>[Component: React Component]</size>\n\nReservation queue card: cover, title, queue position (#N), hold countdown banner, borrow/cancel buttons." <<UniversityLibrarySPA.ReactSPA.ReservationCard>> as UniversityLibrarySPA.ReactSPA.ReservationCard
+  rectangle "==ReservationEmptyState\n<size:10>[Component: React Component]</size>\n\nEmpty state when user has no active reservations." <<UniversityLibrarySPA.ReactSPA.ReservationEmptyState>> as UniversityLibrarySPA.ReactSPA.ReservationEmptyState
+  rectangle "==ReadingBookCard\n<size:10>[Component: React Component]</size>\n\nCard displaying a book's reading status with cover, title, and date-set info." <<UniversityLibrarySPA.ReactSPA.ReadingBookCard>> as UniversityLibrarySPA.ReactSPA.ReadingBookCard
+  rectangle "==ReadingEmptyState\n<size:10>[Component: React Component]</size>\n\nEmpty state when user has no books in their reading tracker." <<UniversityLibrarySPA.ReactSPA.ReadingEmptyState>> as UniversityLibrarySPA.ReactSPA.ReadingEmptyState
+  rectangle "==Button\n<size:10>[Component: UI Primitive]</size>\n\nPolymorphic button with 6 variants (default, outline, secondary, ghost, destructive, link) and 6 sizes. Built on Base UI." <<UniversityLibrarySPA.ReactSPA.Button>> as UniversityLibrarySPA.ReactSPA.Button
+  rectangle "==Card\n<size:10>[Component: UI Primitive]</size>\n\nCompound card component with Header, Title, Description, Action, Content, and Footer slots." <<UniversityLibrarySPA.ReactSPA.Card>> as UniversityLibrarySPA.ReactSPA.Card
+  rectangle "==Input\n<size:10>[Component: UI Primitive]</size>\n\nStyled text input built on Base UI primitives." <<UniversityLibrarySPA.ReactSPA.Input>> as UniversityLibrarySPA.ReactSPA.Input
+  rectangle "==Badge\n<size:10>[Component: UI Primitive]</size>\n\nInline status badge with variant support. Built on Base UI." <<UniversityLibrarySPA.ReactSPA.Badge>> as UniversityLibrarySPA.ReactSPA.Badge
+  rectangle "==Skeleton\n<size:10>[Component: UI Primitive]</size>\n\nAnimated placeholder for loading states." <<UniversityLibrarySPA.ReactSPA.Skeleton>> as UniversityLibrarySPA.ReactSPA.Skeleton
+  rectangle "==AlertMessage\n<size:10>[Component: UI Primitive]</size>\n\nAlert banner with icon for danger, info, and warning variants." <<UniversityLibrarySPA.ReactSPA.AlertMessage>> as UniversityLibrarySPA.ReactSPA.AlertMessage
+  rectangle "==BookCoverImage\n<size:10>[Component: UI Primitive]</size>\n\nBook cover with Open Library CDN URL and graceful fallback placeholder." <<UniversityLibrarySPA.ReactSPA.BookCoverImage>> as UniversityLibrarySPA.ReactSPA.BookCoverImage
+  rectangle "==CopyPips\n<size:10>[Component: UI Primitive]</size>\n\nVisual availability indicator: colored pips for available vs total copies." <<UniversityLibrarySPA.ReactSPA.CopyPips>> as UniversityLibrarySPA.ReactSPA.CopyPips
+  rectangle "==AuthContext\n<size:10>[Component: React Context + Provider]</size>\n\nProvides authentication state (user, token) and login/logout/register actions to the entire component tree." <<UniversityLibrarySPA.ReactSPA.AuthContext>> as UniversityLibrarySPA.ReactSPA.AuthContext
+  rectangle "==ThemeContext\n<size:10>[Component: React Context + Provider]</size>\n\nProvides dark/light theme state with localStorage persistence and toggleTheme action." <<UniversityLibrarySPA.ReactSPA.ThemeContext>> as UniversityLibrarySPA.ReactSPA.ThemeContext
+  rectangle "==AppLayout\n<size:10>[Component: React Component]</size>\n\nRoot layout shell: navbar with navigation links (Catalog, My Loans, Reservations, My Books), user badge, theme toggle, and footer." <<UniversityLibrarySPA.ReactSPA.AppLayout>> as UniversityLibrarySPA.ReactSPA.AppLayout
+  rectangle "==ThemeToggle\n<size:10>[Component: React Component]</size>\n\nAnimated sun/moon icon button that toggles between dark and light mode via ThemeContext." <<UniversityLibrarySPA.ReactSPA.ThemeToggle>> as UniversityLibrarySPA.ReactSPA.ThemeToggle
+}
+
+UniversityLibrarySPA.ReactSPA.CatalogResultsGrid -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.BookCard : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.CatalogResultsGrid -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.Skeleton : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.BookCard -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.BookCoverImage : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.BookCard -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.CopyPips : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.BookCard -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.Button : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.BookCard -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.Card : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.CatalogPagination -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.Button : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.CatalogEmptyState -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.Button : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.CatalogErrorState -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.Button : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.BookDetailPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.useBookDetail : "<color:#707070>Uses for work data"
+UniversityLibrarySPA.ReactSPA.BookDetailPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.BookHero : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.BookDetailPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.BookMeta : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.BookDetailPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.BookAvailabilityPanel : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.BookDetailPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.BookActionCard : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.BookDetailPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.BookDescription : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.BookDetailPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.Button : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.BookDetailPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.Skeleton : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.BookHero -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.BookCoverImage : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.BookAvailabilityPanel -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.CopyPips : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.BookActionCard -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.Button : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.BookActionCard -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.AlertMessage : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.BookActionCard -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.ReadingStatusSelector : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.BookActionCard -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.useReservations : "<color:#707070>Uses for reserve action"
+UniversityLibrarySPA.ReactSPA.BookActionCard -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.AuthContext : "<color:#707070>Reads user state"
+UniversityLibrarySPA.ReactSPA.ReadingStatusSelector -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.useReadingStatus : "<color:#707070>Uses for status actions"
+UniversityLibrarySPA.ReactSPA.ReadingStatusSelector -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.AuthContext : "<color:#707070>Reads user state"
+UniversityLibrarySPA.ReactSPA.AuthPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.Button : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.AuthPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.Card : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.AuthPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.AlertMessage : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.AuthPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.Input : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.AuthPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.AuthContext : "<color:#707070>Uses login/register"
+UniversityLibrarySPA.ReactSPA.MyLoansPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.useMyLoans : "<color:#707070>Uses for loan data"
+UniversityLibrarySPA.ReactSPA.MyLoansPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.LoanCard : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.MyLoansPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.LoanEmptyState : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.MyLoansPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.LoanHistoryTable : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.MyLoansPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.AlertMessage : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.MyLoansPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.Skeleton : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.LoanCard -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.BookCoverImage : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.LoanCard -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.Button : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.LoanCard -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.Card : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.LoanCard -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.LoanOverdueBadge : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.LoanEmptyState -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.Button : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.LoanHistoryTable -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.BookCoverImage : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.MyReservationsPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.useReservations : "<color:#707070>Uses for reservation data"
+UniversityLibrarySPA.ReactSPA.MyReservationsPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.ReservationCard : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.MyReservationsPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.ReservationEmptyState : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.MyReservationsPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.AlertMessage : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.MyReservationsPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.Skeleton : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.ReservationCard -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.Card : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.ReservationCard -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.Button : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.ReservationCard -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.BookCoverImage : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.ReservationEmptyState -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.Button : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.MyBooksPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.useReadingStatus : "<color:#707070>Uses for reading data"
+UniversityLibrarySPA.ReactSPA.MyBooksPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.ReadingBookCard : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.MyBooksPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.ReadingEmptyState : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.MyBooksPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.AlertMessage : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.MyBooksPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.Skeleton : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.ReadingBookCard -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.Card : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.ReadingBookCard -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.BookCoverImage : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.ReadingEmptyState -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.Button : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.useCatalogSearch -[#707070,thickness=2]-> UniversityLibrarySPA.ExpressRESTAPI : "<color:#707070>GET /api/books/search"
+UniversityLibrarySPA.ReactSPA.useBookDetail -[#707070,thickness=2]-> UniversityLibrarySPA.ExpressRESTAPI : "<color:#707070>GET /api/books/:key"
+UniversityLibrarySPA.ReactSPA.useMyLoans -[#707070,thickness=2]-> UniversityLibrarySPA.ExpressRESTAPI : "<color:#707070>GET/POST /api/loans"
+UniversityLibrarySPA.ReactSPA.useReservations -[#707070,thickness=2]-> UniversityLibrarySPA.ExpressRESTAPI : "<color:#707070>GET/POST/DELETE /api/reservations"
+UniversityLibrarySPA.ReactSPA.useReadingStatus -[#707070,thickness=2]-> UniversityLibrarySPA.ExpressRESTAPI : "<color:#707070>GET/PUT/DELETE /api/reading-status"
+UniversityLibrarySPA.ReactSPA.Router -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.AppLayout : "<color:#707070>Renders as root layout"
+UniversityLibrarySPA.ReactSPA.Router -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.ProtectedRoute : "<color:#707070>Wraps authenticated routes"
+UniversityLibrarySPA.ReactSPA.AppLayout -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.ThemeToggle : "<color:#707070>Renders in navbar"
+UniversityLibrarySPA.ReactSPA.AppLayout -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.Button : "<color:#707070>Uses for nav links"
+UniversityLibrarySPA.ReactSPA.AppLayout -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.AuthContext : "<color:#707070>Reads user state"
+UniversityLibrarySPA.ReactSPA.ThemeToggle -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.ThemeContext : "<color:#707070>Reads/toggles theme"
+UniversityLibrarySPA.ReactSPA.Router -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.CatalogPage : "<color:#707070>Route: /"
+UniversityLibrarySPA.ReactSPA.Router -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.BookDetailPage : "<color:#707070>Route: /book/:id"
+UniversityLibrarySPA.ReactSPA.Router -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.AuthPage : "<color:#707070>Route: /login"
+UniversityLibrarySPA.ReactSPA.Router -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.MyLoansPage : "<color:#707070>Route: /loans (protected)"
+UniversityLibrarySPA.ReactSPA.Router -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.MyReservationsPage : "<color:#707070>Route: /reservations (protected)"
+UniversityLibrarySPA.ReactSPA.Router -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.MyBooksPage : "<color:#707070>Route: /my-books (protected)"
+UniversityLibrarySPA.ReactSPA.CatalogPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.useCatalogSearch : "<color:#707070>Uses for search state"
+UniversityLibrarySPA.ReactSPA.CatalogPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.CategoryFilterBar : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.CatalogPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.CatalogSearchForm : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.CatalogPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.CatalogToolbar : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.CatalogPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.CatalogResultsGrid : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.CatalogPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.CatalogPagination : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.CatalogPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.CatalogEmptyState : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.CatalogPage -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.CatalogErrorState : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.CatalogSearchForm -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.Button : "<color:#707070>"
+UniversityLibrarySPA.ReactSPA.CatalogToolbar -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA.Button : "<color:#707070>"
+@enduml

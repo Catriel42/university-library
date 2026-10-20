@@ -1,37 +1,64 @@
 @startuml
-title <size:24>Dynamic View: University Library SPA</size>\n<size:24>Key interaction sequence: a user borrows a book (UC-02 — happy path).</size>
-
 set separator none
+title University Library SPA - Dynamic
+
 top to bottom direction
+skinparam ranksep 60
+skinparam nodesep 30
 
-<style>
-  root {
-    BackgroundColor: #ffffff
-    FontColor: #444444
-  }
-</style>
-
-!include <C4/C4>
-!include <C4/C4_Context>
-!include <C4/C4_Container>
-
-System_Boundary("UniversityLibrarySPA_boundary", "University Library SPA", $tags="") {
-  ContainerDb(UniversityLibrarySPA.PostgreSQLDatabase, "PostgreSQL Database", $techn="PostgreSQL 16", $descr="Stores users, loans, reservations, holds, reading status, and work copy counts.", $tags="", $link="")
-  Container(UniversityLibrarySPA.ReactSPA, "React SPA", $techn="React + TypeScript (Vite)", $descr="Client-side single-page application. Handles routing, state management, and all user interactions.", $tags="", $link="")
-  Container(UniversityLibrarySPA.ExpressRESTAPI, "Express REST API", $techn="Node.js + Express + TypeScript", $descr="Serves the frontend, enforces all business rules (loans, reservations, holds), proxies and caches Open Library, and manages authentication.", $tags="", $link="")
+skinparam {
+  arrowFontSize 10
+  defaultTextAlignment center
+  wrapWidth 200
+  maxMessageSize 100
 }
 
-Person(RegisteredUser, "Registered User", $descr="A student or faculty member. Can borrow, reserve, renew, return books, and track reading status.", $tags="", $link="")
+hide stereotype
 
-Rel(RegisteredUser, UniversityLibrarySPA.ReactSPA, "1: Clicks 'Borrow' on a book", $techn="HTTPS", $tags="", $link="")
-Rel(UniversityLibrarySPA.ReactSPA, UniversityLibrarySPA.ExpressRESTAPI, "2: POST /api/loans  { workKey }", $techn="HTTPS / JSON", $tags="", $link="")
-Rel(UniversityLibrarySPA.ExpressRESTAPI, UniversityLibrarySPA.PostgreSQLDatabase, "3: BEGIN TRANSACTION — check copies, active loans, overdue", $techn="TCP / Prisma ORM", $tags="", $link="")
-Rel(UniversityLibrarySPA.PostgreSQLDatabase, UniversityLibrarySPA.ExpressRESTAPI, "4: Returns availability snapshot", $techn="TCP / Prisma ORM", $tags="", $link="")
-Rel(UniversityLibrarySPA.ExpressRESTAPI, UniversityLibrarySPA.PostgreSQLDatabase, "5: INSERT Loan, decrement available", $techn="TCP / Prisma ORM", $tags="", $link="")
-Rel(UniversityLibrarySPA.PostgreSQLDatabase, UniversityLibrarySPA.ExpressRESTAPI, "6: COMMIT — Loan created, dueDate = now + 14 days", $techn="TCP / Prisma ORM", $tags="", $link="")
-Rel(UniversityLibrarySPA.ExpressRESTAPI, UniversityLibrarySPA.ReactSPA, "7: 201 Created — { loan, dueDate }", $techn="HTTPS / JSON", $tags="", $link="")
-Rel(UniversityLibrarySPA.ReactSPA, RegisteredUser, "8: Shows confirmation with due date", $techn="HTTPS", $tags="", $link="")
+skinparam rectangle<<UniversityLibrarySPA.ExpressRESTAPI>> {
+  BackgroundColor #438dd5
+  FontColor #ffffff
+  BorderColor #2e6295
+  shadowing false
+}
+skinparam database<<UniversityLibrarySPA.PostgreSQLDatabase>> {
+  BackgroundColor #336791
+  FontColor #ffffff
+  BorderColor #234865
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA.ReactSPA>> {
+  BackgroundColor #438dd5
+  FontColor #ffffff
+  BorderColor #2e6295
+  shadowing false
+}
+skinparam person<<RegisteredUser>> {
+  BackgroundColor #0d7377
+  FontColor #ffffff
+  BorderColor #095053
+  shadowing false
+}
+skinparam rectangle<<UniversityLibrarySPA>> {
+  BorderColor #0b4884
+  FontColor #0b4884
+  shadowing false
+}
 
-SHOW_LEGEND(true)
-hide stereotypes
+rectangle "University Library SPA\n<size:10>[Software System]</size>" <<UniversityLibrarySPA>> {
+  rectangle "==React SPA\n<size:10>[Container: React 19 + TypeScript (Vite)]</size>\n\nClient-side single-page application. Handles routing, state management, and all user interactions." <<UniversityLibrarySPA.ReactSPA>> as UniversityLibrarySPA.ReactSPA
+  rectangle "==Express REST API\n<size:10>[Container: Node.js + Express + TypeScript]</size>\n\nServes the frontend, enforces all business rules (loans, reservations, holds), proxies and caches Open Library, and manages authentication." <<UniversityLibrarySPA.ExpressRESTAPI>> as UniversityLibrarySPA.ExpressRESTAPI
+  database "==PostgreSQL Database\n<size:10>[Container: PostgreSQL 16]</size>\n\nStores users, loans, reservations, holds, reading status, and work copy counts." <<UniversityLibrarySPA.PostgreSQLDatabase>> as UniversityLibrarySPA.PostgreSQLDatabase
+}
+
+person "==Registered User\n<size:10>[Person]</size>\n\nA student or faculty member. Can borrow, reserve, renew, return books, and track reading status." <<RegisteredUser>> as RegisteredUser
+
+RegisteredUser -[#707070,thickness=2]-> UniversityLibrarySPA.ReactSPA : "<color:#707070>1. Clicks 'Borrow' on a book\n<color:#707070><size:8>[HTTPS]</size>"
+UniversityLibrarySPA.ReactSPA -[#707070,thickness=2]-> UniversityLibrarySPA.ExpressRESTAPI : "<color:#707070>2. POST /api/loans  { workKey }\n<color:#707070><size:8>[HTTPS / JSON]</size>"
+UniversityLibrarySPA.ExpressRESTAPI -[#707070,thickness=2]-> UniversityLibrarySPA.PostgreSQLDatabase : "<color:#707070>3. BEGIN TRANSACTION — check copies, active loans, overdue\n<color:#707070><size:8>[TCP / Prisma ORM]</size>"
+UniversityLibrarySPA.ExpressRESTAPI <-[#707070,thickness=2]- UniversityLibrarySPA.PostgreSQLDatabase : "<color:#707070>4. Returns availability snapshot\n<color:#707070><size:8>[TCP / Prisma ORM]</size>"
+UniversityLibrarySPA.ExpressRESTAPI -[#707070,thickness=2]-> UniversityLibrarySPA.PostgreSQLDatabase : "<color:#707070>5. INSERT Loan, decrement available\n<color:#707070><size:8>[TCP / Prisma ORM]</size>"
+UniversityLibrarySPA.ExpressRESTAPI <-[#707070,thickness=2]- UniversityLibrarySPA.PostgreSQLDatabase : "<color:#707070>6. COMMIT — Loan created, dueDate = now + 14 days\n<color:#707070><size:8>[TCP / Prisma ORM]</size>"
+UniversityLibrarySPA.ReactSPA <-[#707070,thickness=2]- UniversityLibrarySPA.ExpressRESTAPI : "<color:#707070>7. 201 Created — { loan, dueDate }\n<color:#707070><size:8>[HTTPS / JSON]</size>"
+RegisteredUser <-[#707070,thickness=2]- UniversityLibrarySPA.ReactSPA : "<color:#707070>8. Shows confirmation with due date\n<color:#707070><size:8>[HTTPS]</size>"
 @enduml
