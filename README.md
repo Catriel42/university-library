@@ -5,6 +5,8 @@
 [![PostgreSQL](https://img.shields.io/badge/Database-Amazon%20RDS%20Postgres-336791?style=for-the-badge&logo=postgresql)](https://aws.amazon.com/rds/)
 [![Tests](https://img.shields.io/badge/Tests-161%20Passed-10b981?style=for-the-badge&logo=jest)](tests)
 
+![Demo](./docs/images/portada.png)
+
 A modern, production-grade Single-Page Application (SPA) for university library catalog browsing, loan management, reservation queues, and personal reading trackers. Developed as the final Capstone Project for Web Development at Jala University by **Catriel Pereira Torrez**.
 
 ---
@@ -87,6 +89,7 @@ flowchart TD
 ```
 
 For high-resolution diagrams and architectural documentation:
+
 - **Mermaid Source Diagram:** [docs/architecture/diagrams/deployment-aws.mmd](docs/architecture/diagrams/deployment-aws.mmd)
 - **Deployment Diagram (SVG):** [docs/architecture/diagrams/AWS_Deployment_Architecture_Mermaid.svg](docs/architecture/diagrams/AWS_Deployment_Architecture_Mermaid.svg)
 - **Deployment Diagram (PNG):** [docs/architecture/diagrams/AWS_Deployment_Architecture_Mermaid.png](docs/architecture/diagrams/AWS_Deployment_Architecture_Mermaid.png)
@@ -97,7 +100,7 @@ For high-resolution diagrams and architectural documentation:
 ## Tech Stack
 
 | Layer | Technologies |
-|---|---|
+| --- | --- |
 | **Frontend** | React 19, TypeScript, Vite, React Router 7, Tailwind CSS v4, Lucide Icons, Framer Motion |
 | **Backend** | Node.js 20.x, Express, TypeScript, `@codegenie/serverless-express`, Zod, bcryptjs, JWT |
 | **Database** | PostgreSQL 16.3, Prisma ORM 7 (`@prisma/client`, `@prisma/adapter-pg`) |
