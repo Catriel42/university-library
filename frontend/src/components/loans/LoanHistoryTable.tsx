@@ -37,7 +37,7 @@ export function LoanHistoryTable({ loans }: LoanHistoryTableProps) {
           <div
             key={loan.id}
             onClick={() => navigate(`/book/${encodeURIComponent(loan.workId)}`)}
-            className="bg-surface border-border hover:border-accent/30 flex cursor-pointer items-center justify-between gap-4 rounded-xl border p-4 transition-all"
+            className="bg-surface border-border hover:border-accent/30 flex cursor-pointer flex-col justify-between gap-3 rounded-xl border p-4 transition-all sm:flex-row sm:items-center sm:gap-4"
           >
             <div className="flex min-w-0 flex-1 items-center gap-3.5">
               <BookCoverImage
@@ -56,7 +56,7 @@ export function LoanHistoryTable({ loans }: LoanHistoryTableProps) {
               </div>
             </div>
 
-            <div className="text-muted flex shrink-0 items-center gap-2 font-mono text-xs">
+            <div className="text-muted flex shrink-0 items-center gap-2 pl-12 font-mono text-xs sm:pl-0">
               <CheckCircle2 size={15} className="text-accent" />
               <span>Returned {formattedReturnDate}</span>
             </div>

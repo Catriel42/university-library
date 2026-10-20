@@ -19,7 +19,7 @@ export function CatalogResultsGrid({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="grid w-full grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-4"
+        className="grid w-full grid-cols-1 gap-4 min-[440px]:grid-cols-2 md:grid-cols-3 md:gap-6 xl:grid-cols-4"
       >
         {Array.from({ length: 8 }).map((_, i) => (
           <div key={i} className="flex flex-col gap-3">
@@ -36,7 +36,7 @@ export function CatalogResultsGrid({
   return (
     <motion.div
       key="results"
-      className="grid w-full grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-4"
+      className="grid w-full grid-cols-1 gap-4 min-[440px]:grid-cols-2 md:grid-cols-3 md:gap-6 xl:grid-cols-4"
     >
       {books.map((book, index) => (
         <motion.div

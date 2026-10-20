@@ -1,0 +1,5 @@
+# Marca que aparece arriba del título en la portada
+brand = "Jala University"
+
+# Pie de página en cada hoja del documento
+footer = "Web Development · Catriel Pereira Torrez"

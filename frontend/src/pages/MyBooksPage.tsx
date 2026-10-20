@@ -32,7 +32,7 @@ export function MyBooksPage() {
         </p>
       </div>
 
-      <div className="bg-surface-2 border-border mb-6 flex max-w-xs rounded-xl border p-1">
+      <div className="bg-surface-2 border-border mb-6 flex w-full rounded-xl border p-1 sm:max-w-xs">
         <button
           type="button"
           onClick={() => setActiveTab('READING')}

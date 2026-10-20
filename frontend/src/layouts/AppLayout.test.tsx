@@ -61,4 +61,32 @@ describe('AppLayout', () => {
     fireEvent.click(signOutBtn);
     expect(handleLogout).toHaveBeenCalledTimes(1);
   });
+
+  it('toggles mobile menu drawer on hamburger button click', () => {
+    jest.spyOn(AuthContextModule, 'useAuth').mockReturnValue({
+      user: { id: 'usr-1', email: 'alice@test.com', name: 'Alice Smith' },
+      isLoading: false,
+      login: jest.fn(),
+      register: jest.fn(),
+      logout: jest.fn(),
+    });
+
+    render(
+      <ThemeProvider>
+        <MemoryRouter>
+          <AppLayout />
+        </MemoryRouter>
+      </ThemeProvider>
+    );
+
+    const toggleBtn = screen.getByRole('button', { name: /open navigation menu/i });
+    expect(toggleBtn).toBeInTheDocument();
+    fireEvent.click(toggleBtn);
+
+    expect(screen.getByRole('button', { name: /close navigation menu/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /catalog/i })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: /close navigation menu/i }));
+    expect(screen.getByRole('button', { name: /open navigation menu/i })).toBeInTheDocument();
+  });
 });
