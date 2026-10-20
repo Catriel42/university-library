@@ -106,6 +106,30 @@
   ]
 ]
 
+== Modern State Management: Why No Redux?
+
+#columns(2)[
+  === The 4-Pillar Modern Architecture
+  - *1. URL State (`useSearchParams`):*
+    Search queries, subjects, sorting, pagination.
+    _The browser is the single source of truth_ (instant share, back/forward history, reload resilience).
+  - *2. Global Ambient State (Context API):*
+    `AuthContext` (JWT session) & `ThemeContext`.
+  - *3. Server State (Colocated Custom Hooks):*
+    `useMyLoans`, `useReservations`, `useReadingStatus`. State unmounts with the page (0 memory leaks).
+  - *4. Local UI State (`useState`):* Transient UI.
+
+  #colbreak()
+
+  === Performance Optimization & Memoization
+  - *Why NOT Redux?*
+    Redux introduces boilerplate, global store pollution, and serialization overhead for non-global data.
+  - *Targeted Memoization (`useMemo` + `useCallback`):*
+    - `useMemo`: Isolates expensive `.filter()` in catalog search during keystrokes.
+    - `React.memo`: Pure component barrier on `CatalogResultsGrid` (0 re-renders while typing).
+    - `useCallback`: Reference-stable auth action dispatchers (`login`, `logout`) in `AuthContext`.
+]
+
 == Dynamic Interaction Flow: Borrowing (C4 Flow)
 
 #align(center)[
