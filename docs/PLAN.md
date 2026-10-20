@@ -123,12 +123,17 @@ This document defines the 7-week development plan, sprint structure, and milesto
 - **Objectives:**
   - Perform final security audit: sanitized inputs, Helmet headers, CORS policies, rate limiting (NFR-10 to NFR-13).
   - Configure production environment variables for frontend and backend (NFR-18).
-  - Deploy frontend to a static/serverless platform (Vercel, Netlify, or Amplify) (NFR-19).
-  - Deploy backend API and PostgreSQL database to cloud PaaS (NFR-19).
+  - Deploy frontend to AWS S3 bucket + CloudFront CDN with SPA custom error responses (NFR-19).
+  - Deploy backend API to AWS Lambda (Node.js 20.x, Express, serverless adapter) via API Gateway HTTP API (NFR-19).
+  - Deploy production PostgreSQL database to Amazon RDS (strictly Free Tier compliant, db.t4g.micro, gp3 20GB, single AZ, SSL encrypted) managed via Terraform Infrastructure as Code (IaC).
   - Finalize user and developer documentation, including setup and deployment guides.
   - Final project evaluation, presentation, and delivery.
 - **Deliverables:**
-  - Live production application URLs (frontend and backend).
+  - Live production application URLs:
+    - Frontend (CloudFront CDN): https://d1376jrski7xuw.cloudfront.net
+    - Backend (API Gateway): https://b9fknpj872.execute-api.us-east-1.amazonaws.com
+    - Database (RDS PostgreSQL): `university-library-prod-db.cqnisqsgsdii.us-east-1.rds.amazonaws.com:5432/university_library`
+  - Complete Terraform Infrastructure as Code in `infra/` (`rds.tf`, `s3_cloudfront.tf`, `lambda_api.tf`, `network.tf`).
   - Completed repository documentation and deployment verification.
   - Final project sign-off.
-- **Status:** Pending
+- **Status:** Completed

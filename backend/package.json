@@ -9,11 +9,14 @@
     "start": "node dist/index.js",
     "clean": "rm -rf dist",
     "test": "jest",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "build:lambda": "rm -rf dist-lambda lambda.zip && mkdir -p dist-lambda/dist dist-lambda/node_modules/.prisma && esbuild src/lambda.ts --bundle --platform=node --target=node20 --format=cjs --outfile=dist-lambda/dist/lambda.js --external:@prisma/client && printf '{\\n  \"name\": \"lambda-runtime\",\\n  \"dependencies\": {\\n    \"@prisma/client\": \"7.10.0\",\\n    \"@prisma/adapter-pg\": \"^7.10.0\",\\n    \"pg\": \"^8.23.1\"\\n  }\\n}\\n' > dist-lambda/package.json && cd dist-lambda && npm install --omit=dev && cp -r ../../node_modules/.pnpm/@prisma+client@*/node_modules/.prisma/client node_modules/.prisma/ && zip -q -r ../lambda.zip . -x '*.ts' '*.map'"
   },
   "dependencies": {
+    "@codegenie/serverless-express": "^5.0.0",
     "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "7.10.0",
+    "@prisma/driver-adapter-utils": "7.10.0",
     "@university-library/shared": "workspace:*",
     "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
@@ -36,6 +39,7 @@
     "@types/node": "^24.19.0",
     "@types/pg": "^8.23.1",
     "@types/supertest": "^7.2.1",
+    "esbuild": "^0.28.2",
     "jest": "^30.5.2",
     "prisma": "7.10.0",
     "supertest": "^7.3.1",
