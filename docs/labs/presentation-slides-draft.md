@@ -84,20 +84,14 @@ Create a **lightning-fast, mobile-first web application** that integrates public
 <!-- Slide 4 -->
 # Cloud-Native Architecture (AWS)
 
-```
-[Web Browser] ──(HTTPS / 1st-Party Cookies)──► [CloudFront CDN]
-                                                     │
-         ┌───────────────────────────────────────────┴───────────────────────┐
-         ▼ (Route /*)                                                        ▼ (Route /api/*)
-[Amazon S3: React SPA]                                              [Amazon API Gateway v2]
-(OAC SigV4 Private Bucket)                                                   │
-                                                                             ▼
-                                                                  [AWS Lambda Function]
-                                                                  (Express + Node 20.x)
-                                                                    │                │
-                                                                    ▼                ▼
-                                                           [RDS PostgreSQL]   [Open Library]
-                                                           (16.3 / SSL Mode)  (REST API)
+```mermaid
+flowchart LR
+    Browser["Client Browser"] -->|"HTTPS / Cookie"| CF["CloudFront CDN"]
+    CF -->|"/*"| S3["S3 (React SPA)"]
+    CF -->|"/api/*"| APIGW["API Gateway v2"]
+    APIGW --> Lambda["AWS Lambda"]
+    Lambda --> RDS[("RDS Postgres 16")]
+    Lambda -.-> OL["Open Library API"]
 ```
 
 - **Unified Domain:** `d1376jrski7xuw.cloudfront.net` (Zero cross-site cookie blocking).

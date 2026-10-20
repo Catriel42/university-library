@@ -145,26 +145,50 @@ Toda la infraestructura cloud fue aprovisionada de forma reproducible utilizando
 - **[`infra/s3_cloudfront.tf`](../../infra/s3_cloudfront.tf):** Bucket Amazon S3 privado con Origin Access Control (OAC) y distribución CloudFront CDN con enrutamiento de errores SPA (403/404 $\to$ `/index.html` 200) y reverse proxy hacia la API.
 - **[`infra/outputs.tf`](../../infra/outputs.tf):** Exportación de endpoints, buckets y dominios aprovisionados.
 
-### 4.2 Diagrama de Despliegue
+### 4.2 Diagrama de Despliegue (Mermaid)
 
-Se diseñó y renderizó el diagrama de despliegue en PlantUML, disponible en alta resolución en el repositorio:
+Se diseñó y modeló el diagrama de arquitectura y despliegue cloud en **Mermaid**, disponible en alta resolución en el repositorio:
 
-- **Archivo fuente PlantUML:** [`docs/architecture/diagrams/deployment-aws.puml`](../architecture/diagrams/deployment-aws.puml)
-- **Render vectorial SVG:** [`docs/architecture/diagrams/AWS_Deployment_Architecture.svg`](../architecture/diagrams/AWS_Deployment_Architecture.svg)
-- **Render PNG:** [`docs/architecture/diagrams/AWS_Deployment_Architecture.png`](../architecture/diagrams/AWS_Deployment_Architecture.png)
+- **Archivo fuente Mermaid:** [`docs/architecture/diagrams/deployment-aws.mmd`](../architecture/diagrams/deployment-aws.mmd)
+- **Render vectorial SVG:** [`docs/architecture/diagrams/AWS_Deployment_Architecture_Mermaid.svg`](../architecture/diagrams/AWS_Deployment_Architecture_Mermaid.svg)
+- **Render PNG:** [`docs/architecture/diagrams/AWS_Deployment_Architecture_Mermaid.png`](../architecture/diagrams/AWS_Deployment_Architecture_Mermaid.png)
 
-```text
-[Usuario / Navegador Web] (Mobile / Desktop)
-          │
-          ▼ HTTPS (Same-Origin)
-[Amazon CloudFront CDN (d1376jrski7xuw.cloudfront.net)]
-    ├── Route /* ──────────────► [Amazon S3: Frontend Assets (OAC)]
-    └── Route /api/* & /health ─► [Amazon API Gateway HTTP API v2]
-                                            │
-                                            ▼
-                                  [AWS Lambda: Express + Prisma]
-                                   ├──► [Amazon RDS PostgreSQL 16.3 (SSL)]
-                                   └──► [Open Library API (openlibrary.org)]
+```mermaid
+flowchart TD
+    classDef client fill:#e0f2fe,stroke:#0284c7,stroke-width:2px,color:#0369a1;
+    classDef edge fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,color:#5b21b6;
+    classDef storage fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#15803d;
+    classDef compute fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#b45309;
+    classDef db fill:#ffedd5,stroke:#ea580c,stroke-width:2px,color:#c2410c;
+    classDef ext fill:#f1f5f9,stroke:#64748b,stroke-width:2px,color:#334155;
+
+    Client["Client Web Browser<br/>(Mobile & Desktop Responsive SPA)"]:::client
+
+    subgraph AWS["Amazon Web Services (AWS Cloud · Region: us-east-1)"]
+        CF["Amazon CloudFront CDN<br/><b>d1376jrski7xuw.cloudfront.net</b><br/>(Global Edge · Same-Origin Reverse Proxy)"]:::edge
+
+        subgraph S3Tier["Static Asset Hosting"]
+            S3["Amazon S3 Bucket<br/><b>university-library-prod-frontend</b><br/>(React 19 + Vite · OAC SigV4)"]:::storage
+        end
+
+        subgraph ApiTier["Serverless Backend Tier"]
+            APIGW["Amazon API Gateway HTTP API v2<br/><b>b9fknpj872.execute-api.us-east-1.amazonaws.com</b>"]:::edge
+            Lambda["AWS Lambda Function<br/><b>university-library-prod-api</b><br/>(Node.js 20.x · Express · Prisma ORM)"]:::compute
+        end
+
+        subgraph DbTier["Managed Database Tier"]
+            RDS[("Amazon RDS PostgreSQL 16.3<br/><b>university-library-prod-db</b><br/>(db.t4g.micro · SSL Encrypted)")]:::db
+        end
+    end
+
+    ExtAPI["Open Library REST API<br/><b>openlibrary.org</b><br/>(Book Catalog & Covers)"]:::ext
+
+    Client -->|"HTTPS (Port 443)<br/>Cookie: token (1st-Party)"| CF
+    CF -->|"Route: /* (SPA Fallback 200)"| S3
+    CF -->|"Route: /api/* & /health"| APIGW
+    APIGW -->|"Lambda Proxy Integration"| Lambda
+    Lambda -->|"PostgreSQL Protocol (Port 5432 / SSL)"| RDS
+    Lambda -.->|"HTTP GET (Search & Metadata)"| ExtAPI
 ```
 
 ---
