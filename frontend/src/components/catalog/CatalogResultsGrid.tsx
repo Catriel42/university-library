@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { motion } from 'motion/react';
 import type { WorkDTO } from '@university-library/shared';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -8,7 +9,7 @@ interface CatalogResultsGridProps {
   isLoading: boolean;
 }
 
-export function CatalogResultsGrid({
+export const CatalogResultsGrid = memo(function CatalogResultsGrid({
   books,
   isLoading,
 }: CatalogResultsGridProps) {
@@ -55,4 +56,4 @@ export function CatalogResultsGrid({
       ))}
     </motion.div>
   );
-}
+});

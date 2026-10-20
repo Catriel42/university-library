@@ -2,6 +2,7 @@ import {
   useState,
   useRef,
   useEffect,
+  useMemo,
   useTransition,
   type FormEvent,
 } from 'react';
@@ -266,9 +267,11 @@ export function useCatalogSearch(): UseCatalogSearchReturn {
   };
 
   const totalPages = Math.max(1, Math.ceil(numFound / PAGE_SIZE));
-  const displayedResults = hideUnavailable
-    ? results.filter((book) => book.availableCopies > 0)
-    : results;
+  const displayedResults = useMemo(() => {
+    return hideUnavailable
+      ? results.filter((book) => book.availableCopies > 0)
+      : results;
+  }, [results, hideUnavailable]);
 
   return {
     inputQuery,

@@ -3,6 +3,8 @@ import {
   useContext,
   useState,
   useEffect,
+  useCallback,
+  useMemo,
   type ReactNode,
 } from 'react';
 import type {
@@ -54,32 +56,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const login = async (credentials: LoginRequestDTO) => {
+  const login = useCallback(async (credentials: LoginRequestDTO) => {
     const response = await apiClient.post<AuthResponseDTO>(
       '/auth/login',
       credentials
     );
     setUser(response.data.user);
-  };
+  }, []);
 
-  const register = async (data: RegisterRequestDTO) => {
+  const register = useCallback(async (data: RegisterRequestDTO) => {
     const response = await apiClient.post<AuthResponseDTO>(
       '/auth/register',
       data
     );
     setUser(response.data.user);
-  };
+  }, []);
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       await apiClient.post('/auth/logout');
     } finally {
       setUser(null);
     }
-  };
+  }, []);
+
+  const value = useMemo(
+    () => ({ user, isLoading, login, register, logout }),
+    [user, isLoading, login, register, logout]
+  );
 
   return (
-    <AuthContext value={{ user, isLoading, login, register, logout }}>
+    <AuthContext value={value}>
       {children}
     </AuthContext>
   );
