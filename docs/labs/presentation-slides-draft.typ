@@ -61,7 +61,7 @@
 == C4 Architecture: Level 1 — System Context
 
 #align(center)[
-  #image("figures/SystemContext-dark.png", width: 72%)
+  #image("figures/SystemContext-dark.png", height: 50%)
 ]
 
 - *Student / Faculty User:* Interacts with the Single-Page Application via desktop or mobile web browsers.
@@ -71,7 +71,7 @@
 == C4 Architecture: Level 2 — Containers
 
 #align(center)[
-  #image("figures/Containers-dark.png", width: 92%)
+  #image("figures/Containers-dark.png", height: 46%)
 ]
 
 - *Single-Page Application:* React 19, TypeScript, Vite, Tailwind CSS v4, delivered via Amazon CloudFront CDN.
@@ -81,7 +81,7 @@
 == C4 Architecture: Level 3 — Backend API Components
 
 #align(center)[
-  #image("figures/ApiComponents-dark.png", height: 60%)
+  #image("figures/ApiComponents-dark.png", height: 50%)
 ]
 
 - *Modular Architecture:* Layered Separation of Concerns (Routes $arrow.r$ Controllers $arrow.r$ Services $arrow.r$ Repositories).
@@ -89,13 +89,22 @@
 
 == C4 Architecture: Level 3 — Frontend SPA Architecture
 
-#align(center)[
-  #image("figures/SpaComponents-dark.png", height: 58%)
-]
+#columns(2)[
+  === Modular Component Hierarchy
+  - *Context Providers:* `AuthContext` (JWT session) & `ThemeContext` (Dark/Light).
+  - *Domain Custom Hooks:*
+    - `useCatalogSearch`: Search, filters & pagination.
+    - `useMyLoans`: Active loans, renewals, history.
+    - `useReservations`: Queue position & 48h holds.
+    - `useReadingStatus`: Bookshelf tracker.
+  - *UI System:* Atomic components with Tailwind CSS v4, Lucide Icons, and accessible ARIA attributes.
 
-- *State Management:* React Context (`AuthContext`, `ThemeContext`) + Custom React Hooks.
-- *Domain Hooks:* `useCatalogSearch`, `useMyLoans`, `useReservations`, `useReadingStatus`.
-- *Component Library:* Accessible UI primitives with Tailwind CSS, Lucide Icons, and Framer Motion transitions.
+  #colbreak()
+
+  #align(center)[
+    #image("figures/SpaComponents-dark.png", height: 75%)
+  ]
+]
 
 == Dynamic Interaction Flow: Borrowing (C4 Flow)
 
@@ -159,12 +168,23 @@
 
 == Cloud-Native Deployment Architecture (AWS)
 
-#align(center)[
-  #image("figures/AWS_Deployment_Architecture_Mermaid.png", height: 62%)
-]
+#columns(2)[
+  === Cloud Topology (AWS)
+  - *CloudFront CDN:*
+    Edge caching + *Same-Origin Reverse Proxy* for `/api/*` and `/health`, eliminating cookie blocking.
+  - *Frontend Hosting:*
+    Private S3 bucket with Origin Access Control (OAC SigV4) + SPA routing.
+  - *Serverless Backend:*
+    API Gateway HTTP v2 + AWS Lambda (Node 20.x, Express, Prisma).
+  - *Database Tier:*
+    Amazon RDS PostgreSQL 16.3 (`db.t4g.micro`) with enforced TLS/SSL.
 
-- *Same-Origin Reverse Proxy:* CloudFront routes `/api/*` and `/health` to API Gateway, and `/*` to S3 (OAC SigV4).
-- *Zero Cross-Site Cookie Blocking:* Single public domain `d1376jrski7xuw.cloudfront.net` enables seamless sessions.
+  #colbreak()
+
+  #align(center)[
+    #image("figures/AWS_Deployment_Architecture_Mermaid.png", height: 75%)
+  ]
+]
 
 == Infrastructure as Code (Terraform) & Free Tier
 
