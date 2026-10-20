@@ -1,0 +1,82 @@
+@startuml AWS_Deployment_Architecture
+!theme plain
+skinparam roundcorner 8
+skinparam shadowing false
+skinparam defaultFontName "Helvetica", Arial, sans-serif
+skinparam ArrowColor #2563EB
+skinparam ArrowThickness 1.5
+
+skinparam node {
+    BorderColor #64748B
+    BackgroundColor #F8FAFC
+}
+
+skinparam component {
+    BorderColor #3B82F6
+    BackgroundColor #EFF6FF
+}
+
+skinparam database {
+    BorderColor #059669
+    BackgroundColor #ECFDF5
+}
+
+skinparam cloud {
+    BorderColor #6366F1
+    BackgroundColor #EEF2FF
+}
+
+skinparam actor {
+    BorderColor #0F172A
+    BackgroundColor #F1F5F9
+}
+
+title University Library SPA — AWS Cloud Production Deployment Architecture
+
+actor "User / Web Browser" as user
+
+cloud "External Services" {
+    component "Open Library API\n(openlibrary.org)\nHTTPS / REST" as openlib
+}
+
+node "AWS Cloud (Region: us-east-1)" {
+
+    node "CloudFront CDN Layer" {
+        component "Amazon CloudFront Distribution\n<b>d1376jrski7xuw.cloudfront.net</b>\nTLSv1.2, Gzip/Brotli, Global Edge" as cf
+    }
+
+    node "Frontend Static Hosting" {
+        component "Origin Access Control (OAC)\nSigV4 Signing" as oac
+        component "Amazon S3 Bucket\n<b>university-library-prod-frontend-*</b>\n• React 19 + TypeScript + Vite SPA\n• SPA Error Routing: 403/404 -> /index.html" as s3_frontend
+    }
+
+    node "Serverless Backend Layer" {
+        component "Amazon API Gateway HTTP API v2\n<b>b9fknpj872.execute-api.us-east-1.amazonaws.com</b>\n$default Stage / Proxy Routes" as apigw
+
+        component "AWS Lambda Function\n<b>university-library-prod-api</b>\n• Node.js 20.x | 512 MB\n• Express + @codegenie/serverless-express\n• Prisma ORM Engine" as lambda
+
+        component "Amazon S3 Bucket\n<b>university-library-prod-lambda-*</b>\n• Versioned Lambda Zip (29 MB)" as s3_deploy
+    }
+
+    node "VPC & Persistence Layer (AWS Free Tier)" {
+        component "Security Group: <b>rds_sg</b>\nIngress: TCP 5432 (SSL Enforced)" as sg
+        database "Amazon RDS PostgreSQL 16.3\n<b>university-library-prod-db</b>\n• Instance: db.t4g.micro (Single-AZ)\n• Storage: 20 GB gp3 (No Autoscaling)\n• Database: university_library" as rds
+    }
+}
+
+user --> cf : 1. HTTPS Requests\n(Cookies, Navigation, REST)
+
+cf --> oac : Route: <b>/*</b> (Static Assets)
+oac --> s3_frontend : S3 GetObject (SigV4)
+
+cf --> apigw : Route: <b>/api/*</b> & <b>/health</b>\n(Same-Origin Reverse Proxy\nForwards 1st-party Cookies)
+apigw --> lambda : AWS_PROXY Payload v2
+
+s3_deploy ..> lambda : Deploys artifact\n(via Terraform)
+
+lambda --> sg : Queries over TLS\n(sslmode=require)
+sg --> rds : PostgreSQL Port 5432
+
+lambda --> openlib : Bibliographic search\n& cover metadata (HTTPS)
+
+@enduml
