@@ -102,7 +102,7 @@
   #colbreak()
 
   #align(center)[
-    #image("figures/SpaComponents-dark.png", height: 75%)
+    #image("figures/SpaComponents-dark.png", height: 115%)
   ]
 ]
 
@@ -171,11 +171,11 @@
 #columns(2)[
   === Cloud Topology (AWS)
   - *CloudFront CDN:*
-    Edge caching + *Same-Origin Reverse Proxy* for `/api/*` and `/health`, eliminating cookie blocking.
+    Edge caching + *Same-Origin Reverse Proxy* for `/api/*` and `/health`
   - *Frontend Hosting:*
-    Private S3 bucket with Origin Access Control (OAC SigV4) + SPA routing.
+    Private S3 bucket with Origin Access Control
   - *Serverless Backend:*
-    API Gateway HTTP v2 + AWS Lambda (Node 20.x, Express, Prisma).
+    API Gateway HTTP v2 + AWS Lambda
   - *Database Tier:*
     Amazon RDS PostgreSQL 16.3 (`db.t4g.micro`) with enforced TLS/SSL.
 
