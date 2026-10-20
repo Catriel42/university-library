@@ -12,6 +12,8 @@
     "build": "pnpm -r run build",
     "typecheck": "pnpm --filter @university-library/shared exec tsc --noEmit && pnpm --filter @university-library/backend exec tsc --noEmit && pnpm --filter @university-library/frontend exec tsc -b --noEmit",
     "lint": "pnpm -r lint",
+    "test": "pnpm -r run test",
+    "test:coverage": "pnpm -r run test:coverage",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

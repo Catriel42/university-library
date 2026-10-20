@@ -1,0 +1,25 @@
+import type { Config } from 'jest';
+
+const config: Config = {
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+  roots: ['<rootDir>/src'],
+  modulePathIgnorePatterns: ['<rootDir>/dist'],
+  moduleNameMapper: {
+    '^@university-library/shared$': '<rootDir>/../shared/src/index.ts',
+    '^(\\..*)\\.jsx?$': '$1',
+  },
+  transform: {
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        useESM: false,
+        diagnostics: {
+          ignoreCodes: [151002],
+        },
+      },
+    ],
+  },
+};
+
+export default config;
