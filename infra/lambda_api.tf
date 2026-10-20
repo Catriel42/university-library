@@ -48,17 +48,17 @@ resource "aws_lambda_function" "backend" {
 
   environment {
     variables = {
-      NODE_ENV                    = "production"
-      DATABASE_URL                = "postgresql://${var.db_username}:${var.db_password}@${aws_db_instance.postgres.endpoint}/${var.db_name}?sslmode=require&sslaccept=accept_invalid_certs"
+      NODE_ENV                     = "production"
+      DATABASE_URL                 = "postgresql://${var.db_username}:${var.db_password}@${aws_db_instance.postgres.endpoint}/${var.db_name}?sslmode=require&sslaccept=accept_invalid_certs"
       NODE_TLS_REJECT_UNAUTHORIZED = "0"
-      JWT_SECRET                  = var.jwt_secret
-      FRONTEND_URL           = "https://${aws_cloudfront_distribution.frontend.domain_name}"
-      DEFAULT_COPIES         = "3"
-      MAX_ACTIVE_LOANS       = "5"
-      LOAN_PERIOD_DAYS       = "14"
-      MAX_RENEWALS           = "2"
-      RENEWAL_EXTENSION_DAYS = "7"
-      HOLD_WINDOW_HOURS      = "48"
+      JWT_SECRET                   = var.jwt_secret
+      FRONTEND_URL                 = "*"
+      DEFAULT_COPIES               = "3"
+      MAX_ACTIVE_LOANS             = "5"
+      LOAN_PERIOD_DAYS             = "14"
+      MAX_RENEWALS                 = "2"
+      RENEWAL_EXTENSION_DAYS       = "7"
+      HOLD_WINDOW_HOURS            = "48"
     }
   }
 
@@ -77,10 +77,10 @@ resource "aws_apigatewayv2_api" "http_api" {
   protocol_type = "HTTP"
 
   cors_configuration {
-    allow_origins     = ["https://${aws_cloudfront_distribution.frontend.domain_name}", "http://localhost:5173", "http://localhost:5174"]
+    allow_origins     = ["*"]
     allow_methods     = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
     allow_headers     = ["Content-Type", "Authorization"]
-    allow_credentials = true
+    allow_credentials = false
     max_age           = 300
   }
 
