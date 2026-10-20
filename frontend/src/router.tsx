@@ -1,12 +1,32 @@
+import { lazy, Suspense } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { AppLayout } from '@/layouts/AppLayout';
-import { CatalogPage } from '@/pages/CatalogPage';
-import { AuthPage } from '@/pages/AuthPage';
-import { BookDetailPage } from '@/pages/BookDetailPage';
-import { MyLoansPage } from '@/pages/MyLoansPage';
-import { MyReservationsPage } from '@/pages/MyReservationsPage';
-import { MyBooksPage } from '@/pages/MyBooksPage';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
+
+const CatalogPage = lazy(() =>
+  import('@/pages/CatalogPage').then((m) => ({ default: m.CatalogPage }))
+);
+const BookDetailPage = lazy(() =>
+  import('@/pages/BookDetailPage').then((m) => ({ default: m.BookDetailPage }))
+);
+const MyLoansPage = lazy(() =>
+  import('@/pages/MyLoansPage').then((m) => ({ default: m.MyLoansPage }))
+);
+const MyReservationsPage = lazy(() =>
+  import('@/pages/MyReservationsPage').then((m) => ({
+    default: m.MyReservationsPage,
+  }))
+);
+const MyBooksPage = lazy(() =>
+  import('@/pages/MyBooksPage').then((m) => ({ default: m.MyBooksPage }))
+);
+const AuthPage = lazy(() =>
+  import('@/pages/AuthPage').then((m) => ({ default: m.AuthPage }))
+);
+
+const FallbackLoader = () => (
+  <div className="bg-surface border-border h-48 w-full max-w-4xl animate-pulse rounded-2xl border p-6" />
+);
 
 export const router = createBrowserRouter([
   {
@@ -15,17 +35,27 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <CatalogPage />,
+        element: (
+          <Suspense fallback={<FallbackLoader />}>
+            <CatalogPage />
+          </Suspense>
+        ),
       },
       {
         path: 'book/:id',
-        element: <BookDetailPage />,
+        element: (
+          <Suspense fallback={<FallbackLoader />}>
+            <BookDetailPage />
+          </Suspense>
+        ),
       },
       {
         path: 'loans',
         element: (
           <ProtectedRoute>
-            <MyLoansPage />
+            <Suspense fallback={<FallbackLoader />}>
+              <MyLoansPage />
+            </Suspense>
           </ProtectedRoute>
         ),
       },
@@ -33,7 +63,9 @@ export const router = createBrowserRouter([
         path: 'reservations',
         element: (
           <ProtectedRoute>
-            <MyReservationsPage />
+            <Suspense fallback={<FallbackLoader />}>
+              <MyReservationsPage />
+            </Suspense>
           </ProtectedRoute>
         ),
       },
@@ -41,13 +73,19 @@ export const router = createBrowserRouter([
         path: 'my-books',
         element: (
           <ProtectedRoute>
-            <MyBooksPage />
+            <Suspense fallback={<FallbackLoader />}>
+              <MyBooksPage />
+            </Suspense>
           </ProtectedRoute>
         ),
       },
       {
         path: 'login',
-        element: <AuthPage />,
+        element: (
+          <Suspense fallback={<FallbackLoader />}>
+            <AuthPage />
+          </Suspense>
+        ),
       },
       {
         path: '*',

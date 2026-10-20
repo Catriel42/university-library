@@ -1,5 +1,8 @@
 import { renderHook, waitFor, act } from '@testing-library/react';
-import { ReadingStatus, type ReadingStatusDTO } from '@university-library/shared';
+import {
+  ReadingStatus,
+  type ReadingStatusDTO,
+} from '@university-library/shared';
 import { apiClient } from '@/lib/api';
 import { useReadingStatus } from './useReadingStatus';
 
@@ -59,7 +62,10 @@ describe('useReadingStatus', () => {
 
     let res: ReadingStatusDTO | undefined;
     await act(async () => {
-      res = await result.current.handleSetStatus('OL10W', ReadingStatus.READING);
+      res = await result.current.handleSetStatus(
+        'OL10W',
+        ReadingStatus.READING
+      );
     });
 
     expect(apiClient.put).toHaveBeenCalledWith('/reading-status/OL10W', {
