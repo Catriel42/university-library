@@ -15,7 +15,7 @@ Este laboratorio documenta la fase culminante del proyecto Capstone: la transici
 ### Entregables del Laboratorio
 
 | Entregable | Enlace / Ubicación | Descripción |
-|---|---|---|
+| --- | --- | --- |
 | **Aplicación Capstone en Vivo** | [https://d1376jrski7xuw.cloudfront.net](https://d1376jrski7xuw.cloudfront.net) | Desplegada globalmente mediante Amazon CloudFront CDN con HTTPS y compresión Brotli/Gzip. |
 | **Backend API Gateway & Lambda** | [https://b9fknpj872.execute-api.us-east-1.amazonaws.com](https://b9fknpj872.execute-api.us-east-1.amazonaws.com) | API REST serverless en Node.js 20.x conectada a PostgreSQL en Amazon RDS. |
 | **Repositorio de Código Fuente** | [GitHub: Catriel42/university-library](https://github.com/Catriel42/university-library) | Repositorio completo con `README.md` profesional, código fuente y configuración de Terraform. |
@@ -48,6 +48,7 @@ Durante la auditoría exhaustiva de UI/UX previa a la entrega final, se identifi
 Para solucionar estos problemas de forma integral, se aplicaron las siguientes optimizaciones en el código del frontend:
 
 #### A. Barra de Navegación con Menú Hamburguesa y Drawer Deslizable (`AppLayout.tsx`)
+
 - Se implementó un estado reactivo `isMobileMenuOpen` controlado por un botón táctil con accesibilidad completa (`aria-label`, `aria-expanded`) utilizando los iconos `Menu` y `X` de Lucide.
 - En pantallas móviles (< 768px), el botón activa un drawer deslizable con efecto *backdrop-blur* (`bg-bg/95 backdrop-blur-xl`) que presenta:
   - Ficha de perfil del estudiante autenticado con nombre, correo y avatar.
@@ -56,25 +57,33 @@ Para solucionar estos problemas de forma integral, se aplicaron las siguientes o
   - Cierre automático al interactuar con cualquier enlace o cambiar de vista.
 
 #### B. Cuadrícula Adaptativa del Catálogo (`CatalogResultsGrid.tsx`)
+
 - Se rediseñó el layout de cuadrícula mediante clases de Tailwind responsive:
+
   ```tsx
   className="grid w-full grid-cols-1 gap-4 min-[440px]:grid-cols-2 md:grid-cols-3 md:gap-6 xl:grid-cols-4"
   ```
+
 - En pantallas ultra-estrechas (< 440px), la vista se presenta en 1 columna cómoda con portadas legibles y botones de acción accesibles. A partir de 440px se expande a 2 columnas, 3 en tablets y 4 en pantallas de escritorio.
 
 #### C. Touch Targets Ergonómicos y Barra de Búsqueda Flexible (`CatalogSearchForm.tsx` & `CategoryFilterBar.tsx`)
+
 - Los selectores de alcance de búsqueda (`All | Title | Author`) ahora ocupan el ancho completo en móviles (`w-full sm:w-auto`).
 - El input de búsqueda incluye un padding derecho adecuado (`pr-24`) para evitar que el botón "Search" y el botón "X" de borrado se superpongan con el texto ingresado.
 - La barra de categorías de libros cuenta con desplazamiento horizontal fluido con inercia táctil (`scrollbar-none overflow-x-auto`).
 
 #### D. Historial de Préstamos Adaptable (`LoanHistoryTable.tsx`)
+
 - Se rediseñaron las filas para apilarse en móvil:
+
   ```tsx
   className="flex flex-col justify-between gap-3 rounded-xl border p-4 sm:flex-row sm:items-center sm:gap-4"
   ```
+
   La insignia *"Returned [date]"* se reubica debajo de la información del libro en smartphones, aprovechando todo el ancho disponible sin apretar los textos.
 
 #### E. Selectores de Pestañas de Ancho Completo (`MyLoansPage.tsx` & `MyBooksPage.tsx`)
+
 - Se actualizaron los contenedores de pestañas a `w-full sm:max-w-xs`, permitiendo una distribución táctil simétrica al 50% de la pantalla en dispositivos móviles.
 
 ---
@@ -82,12 +91,16 @@ Para solucionar estos problemas de forma integral, se aplicaron las siguientes o
 ### 2.3 Corrección de Bug Crítico: Sesión y Cookies en Producción (CloudFront Reverse Proxy)
 
 #### El Problema
+
 Al desplegar inicialmente el frontend en S3/CloudFront (`d1376jrski7xuw.cloudfront.net`) y el backend en API Gateway (`b9fknpj872.execute-api.us-east-1.amazonaws.com`), el navegador detectaba las peticiones AJAX como **Cross-Site**. Debido a la política `SameSite=Lax` configurada en la cookie `token`, los navegadores modernos (Chrome, Safari, Firefox) **bloqueaban el envío de la cookie en peticiones subsiguientes**:
+
 - Al intentar pedir prestado un libro (`POST /api/loans`), el servidor respondía con error `401 Unauthorized` ("No estás autenticado").
 - Al recargar la página (*refresh*), la llamada a `/api/auth/me` no enviaba la cookie y la sesión se perdía.
 
 #### La Solución Arquitectónica
+
 En lugar de forzar cookies de terceros (bloqueadas por las políticas ITP de Apple y Privacy Sandbox de Google), se reconfiguró la distribución de **Amazon CloudFront** en [`infra/s3_cloudfront.tf`](../../infra/s3_cloudfront.tf) para actuar como **Reverse Proxy Same-Origin**:
+
 1. Se añadió un segundo origen en CloudFront apuntando al **Amazon API Gateway HTTP API**.
 2. Se crearon dos comportamientos de caché priorizados (*Ordered Cache Behaviors*) para `/api/*` y `/health` con la política gestionada `Managed-AllViewerExceptHostHeader`.
 3. El frontend se configuró para realizar peticiones relativas a `/api`.
@@ -135,11 +148,12 @@ Toda la infraestructura cloud fue aprovisionada de forma reproducible utilizando
 ### 4.2 Diagrama de Despliegue
 
 Se diseñó y renderizó el diagrama de despliegue en PlantUML, disponible en alta resolución en el repositorio:
+
 - **Archivo fuente PlantUML:** [`docs/architecture/diagrams/deployment-aws.puml`](../architecture/diagrams/deployment-aws.puml)
 - **Render vectorial SVG:** [`docs/architecture/diagrams/AWS_Deployment_Architecture.svg`](../architecture/diagrams/AWS_Deployment_Architecture.svg)
 - **Render PNG:** [`docs/architecture/diagrams/AWS_Deployment_Architecture.png`](../architecture/diagrams/AWS_Deployment_Architecture.png)
 
-```
+```text
 [Usuario / Navegador Web] (Mobile / Desktop)
           │
           ▼ HTTPS (Same-Origin)
@@ -177,7 +191,7 @@ Se preparó un borrador completo de 10 diapositivas para la defensa del Capstone
 ### 5.2 Guión Ensayado para la Demostración en Vivo (5-7 Minutos)
 
 | Tiempo | Sección | Acción en Vivo | Puntos Clave a Explicar |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | **0:00 - 1:00** | Introducción | Abrir la app en [https://d1376jrski7xuw.cloudfront.net](https://d1376jrski7xuw.cloudfront.net) | Presentar el propósito del proyecto, destacar el despliegue global en CloudFront y el tema visual oscuro/claro. |
 | **1:00 - 2:00** | Catálogo y Búsqueda | Buscar un autor (ej. *"Tolkien"*), aplicar filtro de materia (*"Fiction"*), ordenar por popularidad | Demostrar integración con la API de Open Library combinada en tiempo real con la disponibilidad de copias físicas de PostgreSQL. |
 | **2:00 - 3:00** | Vista Mobile-First | Activar DevTools en modo iPhone/Android (390px) | Mostrar la barra de navegación con menú hamburguesa, el drawer deslizable accesible, y la cuadrícula adaptable de libros sin desbordamiento. |
