@@ -23,8 +23,8 @@ This document defines the 7-week development plan, sprint structure, and milesto
 | **Week 3**    | Core Catalog: Browsing, Search, Filter, Sort                     | FR-08 to FR-17, NFR-04, NFR-05                   | Completed |
 | **Week 4**    | Authentication, Book Detail, and Core Loan System                | FR-01 to FR-07, FR-18 to FR-28, BR-01 to BR-07   | Completed |
 | **Week 5**    | Renewals, Reservations Queue, and Reading Tracker                | FR-29 to FR-39, BR-08 to BR-14                   | Completed |
-| **Week 6**    | Testing (Unit & Integration), QA, Performance & Accessibility    | NFR-01, NFR-02, NFR-03, NFR-07, NFR-17           | Pending   |
-| **Week 7**    | Production Deployment, Security Verification, and Final Delivery | NFR-10 to NFR-13, NFR-18, NFR-19                 | Pending   |
+| **Week 6**    | Testing (Unit & Integration), QA, Performance & Accessibility    | NFR-01, NFR-02, NFR-03, NFR-07, NFR-17           | Completed |
+| **Week 7**    | Production Deployment, Security Verification, and Final Delivery | NFR-10 to NFR-13, NFR-18, NFR-19                 | Completed |
 
 ---
 
@@ -130,8 +130,8 @@ This document defines the 7-week development plan, sprint structure, and milesto
   - Final project evaluation, presentation, and delivery.
 - **Deliverables:**
   - Live production application URLs:
-    - Frontend (CloudFront CDN): https://d1376jrski7xuw.cloudfront.net
-    - Backend (API Gateway): https://b9fknpj872.execute-api.us-east-1.amazonaws.com
+    - Frontend (CloudFront CDN): [https://d1376jrski7xuw.cloudfront.net](https://d1376jrski7xuw.cloudfront.net)
+    - Backend (API Gateway): [https://b9fknpj872.execute-api.us-east-1.amazonaws.com](https://b9fknpj872.execute-api.us-east-1.amazonaws.com)
     - Database (RDS PostgreSQL): `university-library-prod-db.cqnisqsgsdii.us-east-1.rds.amazonaws.com:5432/university_library`
   - Complete Terraform Infrastructure as Code in `infra/` (`rds.tf`, `s3_cloudfront.tf`, `lambda_api.tf`, `network.tf`).
   - Completed repository documentation and deployment verification.
