@@ -32,12 +32,10 @@ variable "db_password" {
   type        = string
   description = "Database administrator password (min 8 chars)"
   sensitive   = true
-  default     = "UniversityLib2026!Secure"
 }
 
 variable "jwt_secret" {
   type        = string
   description = "Secret key for signing JWT tokens"
   sensitive   = true
-  default     = "super-secret-jwt-token-key-university-library-prod-2026"
 }

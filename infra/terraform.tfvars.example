@@ -1,0 +1,2 @@
+db_password = "ChangeThisToASecurePassword32Chars"
+jwt_secret  = "ChangeThisToASecureJwtSecret48Chars"
